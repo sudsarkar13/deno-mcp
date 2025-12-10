@@ -1,0 +1,168 @@
+name: Bug Report
+description: File a bug report to help us improve the Deno MCP Server
+title: "[Bug]: "
+labels: ["bug", "triage"]
+assignees:
+  - sudsarkar13
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this bug report! Please provide as much detail as possible to help us reproduce and fix the issue.
+
+  - type: textarea
+    id: what-happened
+    attributes:
+      label: What happened?
+      description: A clear and concise description of what the bug is.
+      placeholder: Tell us what you see!
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected-behavior
+    attributes:
+      label: Expected behavior
+      description: A clear and concise description of what you expected to happen.
+      placeholder: What should have happened instead?
+    validations:
+      required: true
+
+  - type: textarea
+    id: steps-to-reproduce
+    attributes:
+      label: Steps to reproduce
+      description: Steps to reproduce the behavior
+      placeholder: |
+        1. Install the package with '...'
+        2. Run command '...'
+        3. Use tool '...'
+        4. See error
+    validations:
+      required: true
+
+  - type: textarea
+    id: error-output
+    attributes:
+      label: Error output
+      description: If applicable, paste the full error message or output
+      render: shell
+      placeholder: Paste error output here...
+
+  - type: dropdown
+    id: environment-os
+    attributes:
+      label: Operating System
+      description: What operating system are you using?
+      options:
+        - Windows
+        - macOS
+        - Linux (Ubuntu)
+        - Linux (Other)
+        - Other
+    validations:
+      required: true
+
+  - type: input
+    id: environment-node
+    attributes:
+      label: Node.js version
+      description: What version of Node.js are you running?
+      placeholder: "e.g., 18.17.0"
+    validations:
+      required: true
+
+  - type: input
+    id: environment-deno
+    attributes:
+      label: Deno version
+      description: What version of Deno are you using?
+      placeholder: "e.g., 1.40.0"
+    validations:
+      required: true
+
+  - type: input
+    id: environment-package
+    attributes:
+      label: Package version
+      description: What version of @sudsarkar13/deno-mcp are you using?
+      placeholder: "e.g., 1.0.0"
+    validations:
+      required: true
+
+  - type: dropdown
+    id: mcp-client
+    attributes:
+      label: MCP Client
+      description: Which MCP client are you using?
+      options:
+        - Claude Desktop
+        - VS Code Continue
+        - MCP Inspector
+        - Custom client
+        - Other
+    validations:
+      required: true
+
+  - type: textarea
+    id: mcp-config
+    attributes:
+      label: MCP Configuration
+      description: Please share your MCP client configuration (remove any sensitive information)
+      render: json
+      placeholder: |
+        {
+          "mcpServers": {
+            "deno-mcp": {
+              "command": "deno-mcp",
+              "args": []
+            }
+          }
+        }
+
+  - type: textarea
+    id: minimal-example
+    attributes:
+      label: Minimal reproduction example
+      description: If possible, provide a minimal code example that reproduces the issue
+      render: typescript
+      placeholder: |
+        // Minimal example that reproduces the bug
+        // Include MCP tool calls, configuration, etc.
+
+  - type: dropdown
+    id: tool-category
+    attributes:
+      label: Tool category (if applicable)
+      description: Which category of tools is affected?
+      options:
+        - Execution tools (run, serve, task, repl, eval)
+        - Development tools (fmt, lint, check, test, bench)
+        - Dependency management (add, remove, install, outdated)
+        - Compilation tools (compile, doc, info, types)
+        - Utility tools (upgrade, version, completions)
+        - Multiple categories
+        - Not tool-specific
+
+  - type: input
+    id: specific-tool
+    attributes:
+      label: Specific tool (if applicable)
+      description: Which specific tool is causing the issue?
+      placeholder: "e.g., deno_run, deno_fmt, deno_test"
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context about the problem here, such as screenshots, logs, or related issues
+      placeholder: Any additional information that might help us understand the issue
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/sudsarkar13/deno-mcp/blob/main/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

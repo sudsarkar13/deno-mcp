@@ -1,0 +1,180 @@
+name: Feature Request
+description: Suggest an idea for the Deno MCP Server
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+assignees:
+  - sudsarkar13
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to suggest a new feature! Please provide as much detail as possible to help us understand and evaluate your request.
+
+  - type: textarea
+    id: problem-description
+    attributes:
+      label: Is your feature request related to a problem?
+      description: A clear and concise description of what the problem is.
+      placeholder: "I'm always frustrated when..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution-description
+    attributes:
+      label: Describe the solution you'd like
+      description: A clear and concise description of what you want to happen.
+      placeholder: "I would like to see..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: alternatives-considered
+    attributes:
+      label: Describe alternatives you've considered
+      description: A clear and concise description of any alternative solutions or features you've considered.
+      placeholder: "I've also considered..."
+
+  - type: dropdown
+    id: feature-category
+    attributes:
+      label: Feature category
+      description: Which category would this feature belong to?
+      options:
+        - New Deno tool integration
+        - Existing tool enhancement
+        - MCP server functionality
+        - Documentation improvement
+        - Developer experience
+        - Performance improvement
+        - Security enhancement
+        - Configuration/Setup
+        - Other
+    validations:
+      required: true
+
+  - type: dropdown
+    id: tool-category
+    attributes:
+      label: Tool category (if applicable)
+      description: If this is related to Deno tools, which category?
+      options:
+        - Execution tools (run, serve, task, repl, eval)
+        - Development tools (fmt, lint, check, test, bench)
+        - Dependency management (add, remove, install, outdated)
+        - Compilation tools (compile, doc, info, types)
+        - Utility tools (upgrade, version, completions)
+        - New tool category
+        - Not tool-specific
+
+  - type: input
+    id: specific-tool
+    attributes:
+      label: Specific tool (if applicable)
+      description: Which specific tool would this enhance or which new tool would you like?
+      placeholder: "e.g., deno_run, deno_fmt, new tool: deno_bundle"
+
+  - type: textarea
+    id: use-cases
+    attributes:
+      label: Use cases
+      description: Describe specific use cases where this feature would be helpful
+      placeholder: |
+        1. When working on large projects...
+        2. During CI/CD pipeline setup...
+        3. For team collaboration...
+    validations:
+      required: true
+
+  - type: textarea
+    id: example-usage
+    attributes:
+      label: Example usage
+      description: If possible, provide an example of how this feature would be used
+      render: typescript
+      placeholder: |
+        // Example of how the feature would be used
+        {
+          "tool": "new_deno_tool",
+          "arguments": {
+            "example": "value"
+          }
+        }
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: Priority
+      description: How important is this feature to you?
+      options:
+        - Low - Nice to have
+        - Medium - Would significantly improve my workflow
+        - High - Essential for my use case
+        - Critical - Blocking my adoption of the tool
+    validations:
+      required: true
+
+  - type: dropdown
+    id: complexity
+    attributes:
+      label: Implementation complexity (your estimate)
+      description: How complex do you think this feature would be to implement?
+      options:
+        - Low - Simple addition or modification
+        - Medium - Moderate changes required
+        - High - Significant development effort
+        - Unknown - Not sure about complexity
+
+  - type: textarea
+    id: deno-command
+    attributes:
+      label: Related Deno command (if applicable)
+      description: If this is about adding a new Deno tool, what's the underlying Deno command?
+      placeholder: "e.g., deno bundle, deno cache, deno vendor"
+
+  - type: textarea
+    id: additional-context
+    attributes:
+      label: Additional context
+      description: Add any other context, screenshots, links, or examples about the feature request here
+      placeholder: "Links to Deno documentation, similar tools, mockups, etc."
+
+  - type: checkboxes
+    id: research
+    attributes:
+      label: Research
+      description: Have you done any research on this feature?
+      options:
+        - label: I have checked the existing documentation
+        - label: I have searched for existing issues
+        - label: I have reviewed the Deno documentation for this feature
+        - label: I have considered the implementation complexity
+
+  - type: dropdown
+    id: contribution
+    attributes:
+      label: Contribution willingness
+      description: Would you be willing to contribute to implementing this feature?
+      options:
+        - "Yes, I can implement this"
+        - "Yes, I can help with testing"
+        - "Yes, I can help with documentation"
+        - "Maybe, depending on complexity"
+        - "No, but I can provide feedback"
+        - "No, I cannot contribute"
+
+  - type: textarea
+    id: breaking-changes
+    attributes:
+      label: Breaking changes
+      description: Would this feature introduce any breaking changes? If so, how could they be mitigated?
+      placeholder: "This feature would/would not introduce breaking changes because..."
+
+  - type: checkboxes
+    id: terms
+    attributes:
+      label: Code of Conduct
+      description: By submitting this issue, you agree to follow our [Code of Conduct](https://github.com/sudsarkar13/deno-mcp/blob/main/CODE_OF_CONDUCT.md)
+      options:
+        - label: I agree to follow this project's Code of Conduct
+          required: true

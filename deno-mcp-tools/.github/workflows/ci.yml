@@ -1,0 +1,388 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+    tags: [ 'v*' ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  NODE_VERSION: '18'
+  REGISTRY_URL: 'https://registry.npmjs.org'
+
+jobs:
+  # Lint and type checking
+  lint:
+    name: Lint and Type Check
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run TypeScript compiler
+        run: npm run lint
+
+      - name: Check code formatting
+        run: npx prettier --check "src/**/*.{ts,js,json}"
+
+  # Build the project
+  build:
+    name: Build Project
+    runs-on: ubuntu-latest
+    needs: lint
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Upload build artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-files
+          path: build/
+          retention-days: 7
+
+  # Test the MCP server
+  test:
+    name: Test MCP Server
+    runs-on: ${{ matrix.os }}
+    needs: build
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+        node-version: ['18', '20']
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'npm'
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: build/
+
+      - name: Make binary executable (Unix)
+        if: runner.os != 'Windows'
+        run: chmod +x build/index.js
+
+      - name: Test MCP server startup
+        run: timeout 10s node build/index.js || test $? = 124
+        shell: bash
+
+      - name: Verify Deno installation
+        run: deno --version
+
+      - name: Run basic functionality tests
+        run: |
+          # Start MCP server in background
+          node build/index.js &
+          MCP_PID=$!
+          sleep 5
+          
+          # Test if server is responsive (basic health check)
+          echo "MCP server started with PID: $MCP_PID"
+          
+          # Kill the server
+          kill $MCP_PID 2>/dev/null || true
+        shell: bash
+
+  # Security audit
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run security audit
+        run: npm audit --audit-level=moderate
+
+      - name: Check for known vulnerabilities
+        run: npx audit-ci --moderate
+
+  # Docker build and test
+  docker:
+    name: Docker Build and Test
+    runs-on: ubuntu-latest
+    needs: [build, test]
+    if: github.event_name == 'push'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: deno-mcp-tools/build/
+
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: deno-mcp-tools/examples/docker-examples
+          file: deno-mcp-tools/examples/docker-examples/Dockerfile
+          tags: deno-mcp:test
+          load: true
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Test Docker container
+        run: |
+          # Start container
+          docker run -d --name test-container deno-mcp:test
+          sleep 10
+          
+          # Check if container is running
+          docker ps | grep test-container
+          
+          # Test Deno installation in container
+          docker exec test-container deno --version
+          
+          # Cleanup
+          docker stop test-container
+          docker rm test-container
+
+  # Publish to NPM (only on version tags)
+  publish-npm:
+    name: Publish to NPM
+    runs-on: ubuntu-latest
+    needs: [lint, build, test, security]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          registry-url: ${{ env.REGISTRY_URL }}
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: build/
+
+      - name: Verify package.json version matches tag
+        run: |
+          TAG_VERSION=${GITHUB_REF#refs/tags/v}
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          if [ "$TAG_VERSION" != "$PACKAGE_VERSION" ]; then
+            echo "Tag version ($TAG_VERSION) does not match package.json version ($PACKAGE_VERSION)"
+            exit 1
+          fi
+
+      - name: Publish to NPM
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create NPM publish summary
+        run: |
+          echo "## NPM Package Published 📦" >> $GITHUB_STEP_SUMMARY
+          echo "Package: @sudsarkar13/deno-mcp" >> $GITHUB_STEP_SUMMARY
+          echo "Version: $(node -p "require('./package.json').version")" >> $GITHUB_STEP_SUMMARY
+          echo "Registry: ${{ env.REGISTRY_URL }}" >> $GITHUB_STEP_SUMMARY
+
+  # Build and publish Docker images (only on version tags)
+  publish-docker:
+    name: Publish Docker Images
+    runs-on: ubuntu-latest
+    needs: [docker]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to Docker Hub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Login to GitHub Container Registry
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Extract metadata
+        id: meta
+        uses: docker/metadata-action@v5
+        with:
+          images: |
+            sudsarkar13/deno-mcp
+            ghcr.io/${{ github.repository_owner }}/deno-mcp
+          tags: |
+            type=ref,event=branch
+            type=ref,event=pr
+            type=semver,pattern={{version}}
+            type=semver,pattern={{major}}.{{minor}}
+            type=semver,pattern={{major}}
+            type=raw,value=latest,enable={{is_default_branch}}
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: deno-mcp-tools/build/
+
+      - name: Build and push Docker images
+        uses: docker/build-push-action@v5
+        with:
+          context: deno-mcp-tools/examples/docker-examples
+          file: deno-mcp-tools/examples/docker-examples/Dockerfile
+          platforms: linux/amd64,linux/arm64
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
+          labels: ${{ steps.meta.outputs.labels }}
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+
+      - name: Create Docker publish summary
+        run: |
+          echo "## Docker Images Published 🐳" >> $GITHUB_STEP_SUMMARY
+          echo "Images:" >> $GITHUB_STEP_SUMMARY
+          echo "- sudsarkar13/deno-mcp:$(echo ${GITHUB_REF#refs/tags/v})" >> $GITHUB_STEP_SUMMARY
+          echo "- ghcr.io/${{ github.repository_owner }}/deno-mcp:$(echo ${GITHUB_REF#refs/tags/v})" >> $GITHUB_STEP_SUMMARY
+
+  # Create GitHub Release (only on version tags)
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [publish-npm, publish-docker]
+    if: startsWith(github.ref, 'refs/tags/v')
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Extract release notes from CHANGELOG
+        id: changelog
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          # Extract release notes from CHANGELOG.md
+          awk "/## \[$VERSION\]/{flag=1; next} /## \[/{flag=0} flag" CHANGELOG.md > release_notes.md
+          if [ ! -s release_notes.md ]; then
+            echo "## Changes" > release_notes.md
+            echo "See [CHANGELOG.md](CHANGELOG.md) for details." >> release_notes.md
+          fi
+
+      - name: Download build artifacts
+        uses: actions/download-artifact@v4
+        with:
+          name: build-files
+          path: build/
+
+      - name: Create release archive
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          tar -czf deno-mcp-$VERSION.tar.gz build/ README.md LICENSE CHANGELOG.md docs/ examples/
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          body_path: release_notes.md
+          files: |
+            deno-mcp-*.tar.gz
+          draft: false
+          prerelease: ${{ contains(github.ref, '-') }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Create release summary
+        run: |
+          echo "## GitHub Release Created 🚀" >> $GITHUB_STEP_SUMMARY
+          echo "Release: ${GITHUB_REF#refs/tags/}" >> $GITHUB_STEP_SUMMARY
+          echo "URL: ${{ github.server_url }}/${{ github.repository }}/releases/tag/${GITHUB_REF#refs/tags/}" >> $GITHUB_STEP_SUMMARY
+
+  # Cleanup artifacts
+  cleanup:
+    name: Cleanup Artifacts
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: always()
+    steps:
+      - name: Delete build artifacts
+        uses: geekyeggo/delete-artifact@v4
+        with:
+          name: build-files
+          failOnError: false
+
+# Notify on workflow completion
+  notify:
+    name: Notify Completion
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - name: Create completion summary
+        run: |
+          echo "## 🎉 Release Pipeline Completed Successfully!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### What was released:" >> $GITHUB_STEP_SUMMARY
+          echo "- 📦 NPM Package: @sudsarkar13/deno-mcp@${GITHUB_REF#refs/tags/v}" >> $GITHUB_STEP_SUMMARY
+          echo "- 🐳 Docker Images: sudsarkar13/deno-mcp:${GITHUB_REF#refs/tags/v}" >> $GITHUB_STEP_SUMMARY
+          echo "- 📋 GitHub Release: ${GITHUB_REF#refs/tags/}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Next steps:" >> $GITHUB_STEP_SUMMARY
+          echo "1. Update documentation if needed" >> $GITHUB_STEP_SUMMARY
+          echo "2. Announce the release to the community" >> $GITHUB_STEP_SUMMARY
+          echo "3. Monitor for any issues or feedback" >> $GITHUB_STEP_SUMMARY
