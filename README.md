@@ -1,3 +1,5 @@
+[![CI/CD Pipeline](https://github.com/sudsarkar13/deno-mcp/actions/workflows/ci.yml/badge.svg)](https://github.com/sudsarkar13/deno-mcp/actions/workflows/ci.yml) [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT) [![npm version](https://img.shields.io/npm/v/@sudsarkar13/deno-mcp.svg)](https://www.npmjs.com/package/@sudsarkar13/deno-mcp)
+
 # Deno MCP Tools
 
 A comprehensive MCP (Model Context Protocol) server that provides secure access to the complete Deno CLI toolchain. This server enables AI assistants and compatible clients to interact with Deno's development tools through a standardized protocol.
