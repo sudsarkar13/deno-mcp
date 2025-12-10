@@ -16,20 +16,31 @@ This guide provides immediate steps to fix npm authentication issues caused by t
 
 ### Step 1: Create New Granular Access Token (5 minutes)
 
-**Option A: Using npm CLI (Recommended)**
+**Option A: Using npm Website (STRONGLY RECOMMENDED)**
+
+**⚠️ CRITICAL: npm CLI Cannot Create Granular Tokens Properly**
+
+The npm CLI has severe limitations for granular token creation:
+
+- `--type=granular` flag is deprecated and causes errors
+- CLI cannot specify package scopes (required for granular tokens)  
+- Multiple authentication and permission issues
+- **Web interface is the ONLY reliable method**
+
+**Use the web interface instead:**
+
+**Option B: Using npm CLI (NOT RECOMMENDED - Will Likely Fail)**
 
 ```bash
-# 1. Login to npm (creates 2-hour session)
+# ❌ This will likely fail - npm CLI cannot handle granular tokens properly
+# The CLI lacks package/scope specification capabilities required for granular tokens
+# Error: "You must have at least one package / scope or organization added to this token"
+
 npm login
-
-# 2. Create granular access token
-npm token create --read-write --cidr=0.0.0.0/0 --description="GitHub Actions CI/CD deno-mcp $(date +%Y-%m-%d)"
-
-# 3. Copy the generated token (starts with npm_...)
-# IMPORTANT: Save this token immediately - it won't be shown again
+npm token create --name="GitHub Actions CI/CD deno-mcp $(date +%Y-%m-%d)" --description="CI/CD token for deno-mcp project"
 ```
 
-**Option B: Using npm Website**
+**Option A: Using npm Website (MANDATORY)**
 
 1. Visit: <https://www.npmjs.com/settings/~/tokens>
 2. Click "Generate New Token"
@@ -162,10 +173,14 @@ If you continue having issues:
 ## 📋 Quick Reference Commands
 
 ```bash
-# Create token
-npm token create --read-write --cidr=0.0.0.0/0 --description="GitHub Actions CI/CD"
+# ❌ CLI token creation is broken for granular tokens - DO NOT USE
+# npm token create --name="GitHub Actions CI/CD" --description="CI/CD token"
+# Error: "You must have at least one package / scope or organization added"
 
-# List tokens
+# ✅ ONLY reliable method: Use web interface
+# Visit: https://www.npmjs.com/settings/~/tokens
+
+# List existing tokens
 npm token list
 
 # Revoke token
@@ -174,9 +189,12 @@ npm token revoke <token-id>
 # Test authentication
 npm whoami
 
-# Test CI/CD
+# Test CI/CD pipeline
 git tag test-v$(date +%s) && git push origin test-v$(date +%s)
 ```
+
+**🚨 CRITICAL**: npm CLI cannot create granular tokens. You MUST use the web interface:
+<https://www.npmjs.com/settings/~/tokens>
 
 ---
 
