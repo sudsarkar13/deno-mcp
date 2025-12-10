@@ -4,6 +4,12 @@
 
 A comprehensive MCP (Model Context Protocol) server that provides secure access to the complete Deno CLI toolchain. This server enables AI assistants and compatible clients to interact with Deno's development tools through a standardized protocol.
 
+## 🚨 Important Notice for Contributors & Maintainers
+
+**NPM Authentication Update (December 2025)**: npm has permanently revoked all classic tokens. If you're experiencing CI/CD publishing failures, please follow the **[NPM Migration Guide](.github/NPM_MIGRATION_GUIDE.md)** immediately.
+
+For comprehensive release procedures, see the **[Release Guide](.github/RELEASE_GUIDE.md)**.
+
 ## Features
 
 ### 🚀 Execution Tools

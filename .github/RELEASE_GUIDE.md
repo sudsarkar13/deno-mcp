@@ -28,9 +28,25 @@ The Deno MCP Tools project uses an automated CI/CD pipeline for releases, trigge
 ### Required Access & Permissions
 
 - **GitHub Repository**: Write access to create tags and releases
-- **NPM Registry**: Publish access with `NPM_TOKEN` secret
+- **NPM Registry**: Publish access with **granular access token** (see [NPM Authentication Setup](#npm-authentication-setup))
 - **Docker Hub**: Push access with `DOCKERHUB_USERNAME` and `DOCKERHUB_TOKEN` secrets
 - **GitHub Container Registry**: Automatic access via `GITHUB_TOKEN`
+
+### NPM Authentication Setup
+
+**⚠️ CRITICAL: NPM Classic Tokens Deprecated**
+
+As of December 9, 2025, npm has permanently revoked all classic tokens. You **must** use granular access tokens for CI/CD automation.
+
+**Required GitHub Secret Configuration:**
+- Secret Name: `NPM_TOKEN`
+- Secret Value: Granular access token (not classic token)
+- Token Requirements:
+  - **Type**: Granular Access Token
+  - **Permissions**: Read and Write
+  - **2FA Bypass**: Enabled (for CI/CD automation)
+  - **Expiration**: Maximum 90 days
+  - **Packages**: `@sudsarkar13/deno-mcp` (or all packages)
 
 ### Required Tools (for manual releases)
 
@@ -191,18 +207,35 @@ npm test
 
 ### Step 2: NPM Publishing
 
+**⚠️ Important: New Authentication Required**
+
+As of December 9, 2025, npm uses session-based authentication. For manual publishing:
+
 ```bash
-# Login to NPM (if not already logged in)
+# Login to NPM (creates 2-hour session token)
 npm login
 
 # Verify authentication
 npm whoami
 
+# Note: You'll need to re-authenticate every 2 hours
+# 2FA will be enforced during publishing
+
 # Dry run to check what will be published
 npm publish --dry-run
 
-# Publish to NPM
+# Publish to NPM (2FA required)
 npm publish
+```
+
+**For CI/CD Token Creation:**
+
+```bash
+# Create granular access token using CLI
+npm token create --read-write --cidr=0.0.0.0/0 --description="GitHub Actions CI/CD"
+
+# Or use the web interface at:
+# https://www.npmjs.com/settings/~/tokens
 ```
 
 ### Step 3: Docker Publishing
@@ -359,20 +392,62 @@ git push origin main
 
 #### 2. NPM Authentication Failed
 
-**Error**: "npm ERR! 403 Forbidden - PUT <https://registry.npmjs.org/@sudsarkar13%2fdeno-mcp>"
+**⚠️ Updated for New NPM Security Changes (Dec 2025)**
 
-**Solution**:
+**Common Errors:**
+
+1. **Classic Token Error**: "npm ERR! 403 Forbidden" or "Invalid authentication token"
+2. **Session Expired**: "npm ERR! need auth" or "Session expired"
+3. **2FA Required**: "npm ERR! publish failed, need 2-factor auth"
+
+**Solutions:**
+
+**For CI/CD Pipeline Failures:**
 
 ```bash
-# Re-authenticate with NPM
-npm logout
-npm login
+# 1. Create new granular access token
+npm token create --read-write --cidr=0.0.0.0/0 --description="GitHub Actions CI/CD"
 
-# Verify authentication
+# 2. Update GitHub repository secret
+# Go to: https://github.com/sudsarkar13/deno-mcp/settings/secrets/actions
+# Update NPM_TOKEN with the new granular token
+
+# 3. Ensure token has correct permissions:
+# - Type: Granular Access Token
+# - Permissions: Read and Write  
+# - 2FA Bypass: Enabled
+# - Packages: @sudsarkar13/deno-mcp
+# - Expiration: Set to 90 days maximum
+```
+
+**For Local Development:**
+
+```bash
+# 1. Re-authenticate with session-based login
+npm logout
+npm login  # Creates 2-hour session
+
+# 2. Verify authentication
 npm whoami
 
-# Check package access
-npm access list packages
+# 3. Note: Re-authentication required every 2 hours
+# 4. 2FA will be prompted during publishing
+
+# 5. Check package access
+npm access list packages @sudsarkar13
+```
+
+**Token Management Best Practices:**
+
+```bash
+# List current tokens
+npm token list
+
+# Revoke old/compromised tokens
+npm token revoke <token-id>
+
+# Create tokens with specific scopes
+npm token create --read-write --package=@sudsarkar13/deno-mcp
 ```
 
 #### 3. Docker Build Failed
@@ -550,6 +625,118 @@ Keep `CHANGELOG.md` updated with every release:
 - Bug fix A
 - Bug fix B
 ```
+
+## Token Management & Security
+
+### Token Rotation Schedule
+
+**⚠️ CRITICAL: Granular tokens expire every 90 days maximum**
+
+**Recommended Rotation Schedule:**
+- **Production tokens**: Every 60 days
+- **Development tokens**: Every 30 days
+- **Emergency tokens**: Immediately after use
+
+### Automated Token Rotation Workflow
+
+**Set up calendar reminders:**
+
+```bash
+# Add to calendar/reminder system
+# "Rotate NPM token for deno-mcp project"
+# Frequency: Every 60 days
+# Include: Token creation and GitHub secret update steps
+```
+
+**Token Rotation Process:**
+
+```bash
+# 1. Create new granular access token
+npm token create --read-write --cidr=0.0.0.0/0 --description="GitHub Actions CI/CD $(date +%Y-%m-%d)"
+
+# 2. Update GitHub secret immediately
+# Go to: https://github.com/sudsarkar13/deno-mcp/settings/secrets/actions
+# Update NPM_TOKEN with new token value
+
+# 3. Test the new token
+git tag test-token-v$(date +%s) && git push origin test-token-v$(date +%s)
+
+# 4. Monitor CI/CD pipeline for successful authentication
+
+# 5. Revoke old token
+npm token list  # Find old token ID
+npm token revoke <old-token-id>
+
+# 6. Clean up test tag
+git tag -d test-token-v$(date +%s)
+git push origin --delete test-token-v$(date +%s)
+```
+
+### OIDC Trusted Publishing (Recommended Long-term Solution)
+
+**⚠️ Most Secure Option - No Token Management Required**
+
+OIDC (OpenID Connect) trusted publishing eliminates the need for long-lived tokens by using GitHub's identity to authenticate with npm.
+
+**Benefits:**
+- No token rotation required
+- Enhanced security through short-lived tokens
+- Automatic authentication via GitHub Actions
+- No secrets management overhead
+
+**Setup OIDC Trusted Publishing:**
+
+1. **Configure npm Package for OIDC:**
+   ```bash
+   # Visit: https://www.npmjs.com/package/@sudsarkar13/deno-mcp/access
+   # Add trusted publisher:
+   # - Provider: GitHub Actions
+   # - Repository: sudsarkar13/deno-mcp
+   # - Environment: production (optional)
+   # - Workflow: ci.yml
+   ```
+
+2. **Update CI/CD Workflow:**
+   ```yaml
+   # Add to .github/workflows/ci.yml in publish-npm job
+   permissions:
+     contents: read
+     id-token: write  # Required for OIDC
+
+   # Replace npm publish step with:
+   - name: Publish to NPM via OIDC
+     run: npm publish --provenance --access public
+     env:
+       NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}  # Remove this line
+   ```
+
+3. **Migration Timeline:**
+   ```bash
+   # Phase 1: Test OIDC in staging (if available)
+   # Phase 2: Update production workflow
+   # Phase 3: Revoke all granular tokens
+   # Phase 4: Remove NPM_TOKEN secret
+   ```
+
+### Security Best Practices
+
+**Token Security:**
+- Never commit tokens to version control
+- Use environment-specific tokens when possible
+- Enable audit logging for token usage
+- Regular security reviews of token permissions
+
+**Access Control:**
+- Limit token scope to specific packages
+- Use IP restrictions when feasible
+- Enable 2FA bypass only for automation
+- Regular access reviews
+
+**Monitoring:**
+- Set up alerts for token usage
+- Monitor for unusual publishing activity
+- Regular security audits
+- Incident response procedures
 
 ---
 
