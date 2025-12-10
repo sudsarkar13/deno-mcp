@@ -1,0 +1,67 @@
+{
+	"name": "@sudsarkar13/deno-mcp",
+	"version": "1.0.0",
+	"description": "A comprehensive MCP server for Deno development tools. Provides secure access to the complete Deno CLI toolchain including execution, testing, formatting, linting, compilation, and deployment capabilities through the Model Context Protocol.",
+	"private": false,
+	"type": "module",
+	"main": "./build/index.js",
+	"bin": {
+		"deno-mcp": "./build/index.js"
+	},
+	"files": [
+		"build",
+		"README.md",
+		"LICENSE",
+		"docs",
+		"examples"
+	],
+	"scripts": {
+		"build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+		"prepare": "npm run build",
+		"watch": "tsc --watch",
+		"dev": "npm run watch",
+		"test": "npm run build && node --test",
+		"lint": "tsc --noEmit",
+		"clean": "rm -rf build",
+		"inspector": "npx @modelcontextprotocol/inspector build/index.js",
+		"prepublishOnly": "npm run clean && npm run build"
+	},
+	"keywords": [
+		"deno",
+		"mcp",
+		"model-context-protocol",
+		"typescript",
+		"development-tools",
+		"cli",
+		"automation",
+		"developer-experience",
+		"toolchain",
+		"runtime"
+	],
+	"author": {
+		"name": "Sudeepta Sarkar",
+		"email": "sudsarkar13@gmail.com"
+	},
+	"license": "MIT",
+	"homepage": "https://github.com/sudsarkar13/deno-mcp#readme",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/sudsarkar13/deno-mcp.git"
+	},
+	"bugs": {
+		"url": "https://github.com/sudsarkar13/deno-mcp/issues"
+	},
+	"engines": {
+		"node": ">=18.0.0"
+	},
+	"dependencies": {
+		"@modelcontextprotocol/sdk": "0.6.0"
+	},
+	"devDependencies": {
+		"@types/node": "^20.11.24",
+		"typescript": "^5.3.3"
+	},
+	"publishConfig": {
+		"access": "public"
+	}
+}

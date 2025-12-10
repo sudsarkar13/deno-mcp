@@ -1,0 +1,59 @@
+# Deno MCP Server Development Docker Configuration
+FROM node:20-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    curl \
+    unzip \
+    git \
+    openssh-client \
+    bash \
+    vim \
+    nano
+
+# Install Deno
+RUN curl -fsSL https://deno.land/install.sh | sh \
+    && mv /root/.deno/bin/deno /usr/local/bin/deno \
+    && chmod +x /usr/local/bin/deno
+
+# Set working directory
+WORKDIR /app
+
+# Install the MCP server globally
+RUN npm install -g @sudsarkar13/deno-mcp
+
+# Install additional development tools
+RUN npm install -g \
+    @modelcontextprotocol/inspector \
+    typescript \
+    nodemon
+
+# Create a non-root user for security
+RUN addgroup -g 1001 -S denouser \
+    && adduser -S denouser -u 1001 -s /bin/bash
+
+# Create necessary directories
+RUN mkdir -p /workspace /home/denouser/.deno /home/denouser/.vscode-server \
+    && chown -R denouser:denouser /workspace /home/denouser
+
+# Switch to non-root user
+USER denouser
+
+# Set environment variables
+ENV DENO_DIR=/home/denouser/.deno
+ENV PATH=/usr/local/bin:/usr/bin:/bin
+ENV SHELL=/bin/bash
+
+# Create development configuration
+RUN echo 'export PS1="\u@\h:\w\$ "' >> /home/denouser/.bashrc \
+    && echo 'alias ll="ls -la"' >> /home/denouser/.bashrc \
+    && echo 'alias deno-inspect="npx @modelcontextprotocol/inspector"' >> /home/denouser/.bashrc
+
+# Set default working directory for development
+WORKDIR /workspace
+
+# Expose ports for development
+EXPOSE 3000 8080 9229
+
+# Keep container running for development
+CMD ["bash"]

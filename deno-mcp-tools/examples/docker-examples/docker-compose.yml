@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  deno-mcp:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: deno-mcp-server
+    volumes:
+      # Mount your project directory
+      - ./workspace:/workspace
+      # Persist Deno cache
+      - deno-cache:/home/denouser/.deno
+    environment:
+      - DENO_DIR=/home/denouser/.deno
+    ports:
+      - "3000:3000"
+    restart: unless-stopped
+    # Optional: Add resource limits
+    deploy:
+      resources:
+        limits:
+          memory: 512M
+          cpus: '0.5'
+        reservations:
+          memory: 256M
+          cpus: '0.25'
+
+  # Optional: Add a development environment with additional tools
+  deno-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: deno-dev-environment
+    volumes:
+      - ./workspace:/workspace
+      - deno-cache:/home/denouser/.deno
+      # Mount VS Code server if using remote development
+      - vscode-server:/home/denouser/.vscode-server
+    environment:
+      - DENO_DIR=/home/denouser/.deno
+    ports:
+      - "3001:3000"
+      - "8080:8080"  # For development servers
+    command: ["tail", "-f", "/dev/null"]  # Keep container running for development
+
+volumes:
+  deno-cache:
+    driver: local
+  vscode-server:
+    driver: local
