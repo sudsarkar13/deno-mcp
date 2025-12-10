@@ -16,14 +16,14 @@
 		"examples"
 	],
 	"scripts": {
-		"build": "tsc && node -e \"require('fs').chmodSync('build/index.js', '755')\"",
+		"build": "tsc && node -e \"const fs = require('fs'); const path = 'build/index.js'; if (process.platform !== 'win32' && fs.existsSync(path)) { fs.chmodSync(path, '755'); }\"",
 		"prepare": "npm run build",
 		"watch": "tsc --watch",
 		"dev": "npm run watch",
-		"test": "npm run build && node --test test/*.test.js",
+		"test": "npm run build && node --test test/mcp-server.test.js",
 		"lint": "tsc --noEmit && npx prettier --check \"src/**/*.{ts,js,json}\"",
 		"format": "npx prettier --write \"src/**/*.{ts,js,json}\"",
-		"clean": "rm -rf build",
+		"clean": "node -e \"const fs = require('fs'); if (fs.existsSync('build')) { fs.rmSync('build', { recursive: true, force: true }); }\"",
 		"inspector": "npx @modelcontextprotocol/inspector build/index.js",
 		"prepublishOnly": "npm run clean && npm run build"
 	},
