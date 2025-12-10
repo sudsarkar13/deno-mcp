@@ -37,13 +37,19 @@ log_test_result() {
         ((TESTS_FAILED++))
     fi
     
-    # Update JSON results
-    jq --arg name "$test_name" \
-       --arg status "$status" \
-       --arg message "$message" \
-       --arg timestamp "$timestamp" \
-       '.tests += [{"name": $name, "status": $status, "message": $message, "timestamp": $timestamp}]' \
-       "$TEST_RESULTS_FILE" > "${TEST_RESULTS_FILE}.tmp" && mv "${TEST_RESULTS_FILE}.tmp" "$TEST_RESULTS_FILE"
+    # Update JSON results (with error handling)
+    if command -v jq >/dev/null 2>&1; then
+        jq --arg name "$test_name" \
+           --arg status "$status" \
+           --arg message "$message" \
+           --arg timestamp "$timestamp" \
+           '.tests += [{"name": $name, "status": $status, "message": $message, "timestamp": $timestamp}]' \
+           "$TEST_RESULTS_FILE" > "${TEST_RESULTS_FILE}.tmp" && mv "${TEST_RESULTS_FILE}.tmp" "$TEST_RESULTS_FILE" || {
+           echo "Warning: Failed to update JSON results"
+        }
+    else
+        echo "Warning: jq not available for JSON processing"
+    fi
 }
 
 # Test 1: System Dependencies
@@ -56,7 +62,7 @@ else
 fi
 
 if command -v deno >/dev/null 2>&1; then
-    DENO_VERSION=$(deno --version | head -n1)
+    DENO_VERSION=$(timeout 5 deno --version 2>/dev/null | head -n1 || echo "unknown")
     log_test_result "Deno Installation" "PASS" "Deno version: $DENO_VERSION"
 else
     log_test_result "Deno Installation" "FAIL" "Deno not found"
