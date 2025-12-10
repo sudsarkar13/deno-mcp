@@ -18,10 +18,10 @@ WORKDIR /app
 # Copy package.json and package-lock.json first for better caching
 COPY package*.json ./
 
-# Install dependencies
-RUN npm ci --only=production
+# Install only runtime dependencies (no build step needed)
+RUN npm ci --only=production --ignore-scripts
 
-# Copy the built application
+# Copy the pre-built application
 COPY build/ ./build/
 COPY README.md LICENSE ./
 
