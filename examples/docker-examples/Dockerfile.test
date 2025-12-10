@@ -1,0 +1,49 @@
+# Deno MCP Server CI Test Docker Configuration
+FROM node:20-alpine
+
+# Install system dependencies
+RUN apk add --no-cache \
+    curl \
+    unzip \
+    bash
+
+# Install Deno
+RUN curl -fsSL https://deno.land/install.sh | sh \
+    && mv /root/.deno/bin/deno /usr/local/bin/deno \
+    && chmod +x /usr/local/bin/deno
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json first for better caching
+COPY package*.json ./
+
+# Install dependencies
+RUN npm ci --only=production
+
+# Copy the built application
+COPY build/ ./build/
+COPY README.md LICENSE ./
+
+# Make the binary executable
+RUN chmod +x build/index.js
+
+# Create a non-root user for security
+RUN addgroup -g 1001 -S denouser \
+    && adduser -S denouser -u 1001
+
+# Create workspace directory
+RUN mkdir -p /workspace && chown denouser:denouser /workspace
+
+# Switch to non-root user
+USER denouser
+
+# Set environment variables
+ENV DENO_DIR=/home/denouser/.deno
+ENV PATH=/usr/local/bin:/usr/bin:/bin
+
+# Set default working directory
+WORKDIR /workspace
+
+# Default command to run the MCP server
+CMD ["node", "/app/build/index.js"]

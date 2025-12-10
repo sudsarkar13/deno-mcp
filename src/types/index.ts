@@ -44,7 +44,7 @@ export interface DenoTestOptions extends DenoCommandOptions {
   filter?: string;
   shuffle?: boolean;
   seed?: number;
-  reporter?: 'pretty' | 'dot' | 'json' | 'junit' | 'tap';
+  reporter?: "pretty" | "dot" | "json" | "junit" | "tap";
 }
 
 export interface DenoBenchOptions extends DenoCommandOptions {
@@ -62,7 +62,7 @@ export interface DenoFormatOptions extends DenoCommandOptions {
   ignore?: string[];
   indentWidth?: number;
   lineWidth?: number;
-  proseWrap?: 'always' | 'never' | 'preserve';
+  proseWrap?: "always" | "never" | "preserve";
   singleQuote?: boolean;
   semiColons?: boolean;
 }
@@ -148,7 +148,7 @@ export interface DenoUpgradeOptions extends DenoCommandOptions {
 }
 
 export interface DenoPermissionDescriptor {
-  name: 'read' | 'write' | 'net' | 'env' | 'run' | 'ffi' | 'hrtime' | 'sys';
+  name: "read" | "write" | "net" | "env" | "run" | "ffi" | "hrtime" | "sys";
   path?: string;
   host?: string;
 }
@@ -194,206 +194,301 @@ export class DenoCommandError extends Error {
     message: string,
     public code: number,
     public stdout: string,
-    public stderr: string
+    public stderr: string,
   ) {
     super(message);
-    this.name = 'DenoCommandError';
+    this.name = "DenoCommandError";
   }
 }
 
 export class DenoPermissionError extends Error {
-  constructor(message: string, public permission: DenoPermissionDescriptor) {
+  constructor(
+    message: string,
+    public permission: DenoPermissionDescriptor,
+  ) {
     super(message);
-    this.name = 'DenoPermissionError';
+    this.name = "DenoPermissionError";
   }
 }
 
 export class DenoConfigError extends Error {
-  constructor(message: string, public configPath?: string) {
+  constructor(
+    message: string,
+    public configPath?: string,
+  ) {
     super(message);
-    this.name = 'DenoConfigError';
+    this.name = "DenoConfigError";
   }
 }
 
 // Tool input schemas for MCP
 export const TOOL_SCHEMAS = {
   deno_run: {
-    type: 'object',
+    type: "object",
     properties: {
-      script: { type: 'string', description: 'Path to the script to run' },
-      args: { type: 'array', items: { type: 'string' }, description: 'Arguments to pass to the script' },
-      permissions: { type: 'array', items: { type: 'string' }, description: 'Permissions to grant (e.g., --allow-read, --allow-net)' },
-      watch: { type: 'boolean', description: 'Watch for file changes and restart' },
-      workingDirectory: { type: 'string', description: 'Working directory to run the command in' },
-      envVars: { type: 'object', description: 'Environment variables to set' }
+      script: { type: "string", description: "Path to the script to run" },
+      args: {
+        type: "array",
+        items: { type: "string" },
+        description: "Arguments to pass to the script",
+      },
+      permissions: {
+        type: "array",
+        items: { type: "string" },
+        description: "Permissions to grant (e.g., --allow-read, --allow-net)",
+      },
+      watch: {
+        type: "boolean",
+        description: "Watch for file changes and restart",
+      },
+      workingDirectory: {
+        type: "string",
+        description: "Working directory to run the command in",
+      },
+      envVars: { type: "object", description: "Environment variables to set" },
     },
-    required: ['script']
+    required: ["script"],
   },
-  
+
   deno_serve: {
-    type: 'object',
+    type: "object",
     properties: {
-      script: { type: 'string', description: 'Path to the server script' },
-      port: { type: 'number', description: 'Port to serve on (default: 8000)' },
-      host: { type: 'string', description: 'Host to serve on (default: 0.0.0.0)' },
-      permissions: { type: 'array', items: { type: 'string' }, description: 'Permissions to grant' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
+      script: { type: "string", description: "Path to the server script" },
+      port: { type: "number", description: "Port to serve on (default: 8000)" },
+      host: {
+        type: "string",
+        description: "Host to serve on (default: 0.0.0.0)",
+      },
+      permissions: {
+        type: "array",
+        items: { type: "string" },
+        description: "Permissions to grant",
+      },
+      workingDirectory: { type: "string", description: "Working directory" },
     },
-    required: ['script']
+    required: ["script"],
   },
 
   deno_test: {
-    type: 'object',
+    type: "object",
     properties: {
-      pattern: { type: 'string', description: 'Test file pattern to match' },
-      coverage: { type: 'boolean', description: 'Generate coverage report' },
-      parallel: { type: 'boolean', description: 'Run tests in parallel' },
-      failFast: { type: 'boolean', description: 'Stop on first failure' },
-      filter: { type: 'string', description: 'Filter tests by name pattern' },
-      permissions: { type: 'array', items: { type: 'string' }, description: 'Permissions to grant' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      pattern: { type: "string", description: "Test file pattern to match" },
+      coverage: { type: "boolean", description: "Generate coverage report" },
+      parallel: { type: "boolean", description: "Run tests in parallel" },
+      failFast: { type: "boolean", description: "Stop on first failure" },
+      filter: { type: "string", description: "Filter tests by name pattern" },
+      permissions: {
+        type: "array",
+        items: { type: "string" },
+        description: "Permissions to grant",
+      },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_fmt: {
-    type: 'object',
+    type: "object",
     properties: {
-      files: { type: 'array', items: { type: 'string' }, description: 'Files or directories to format' },
-      check: { type: 'boolean', description: 'Check if files are formatted without modifying them' },
-      diff: { type: 'boolean', description: 'Show diff of formatting changes' },
-      singleQuote: { type: 'boolean', description: 'Use single quotes' },
-      indentWidth: { type: 'number', description: 'Number of spaces for indentation' },
-      lineWidth: { type: 'number', description: 'Maximum line width' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      files: {
+        type: "array",
+        items: { type: "string" },
+        description: "Files or directories to format",
+      },
+      check: {
+        type: "boolean",
+        description: "Check if files are formatted without modifying them",
+      },
+      diff: { type: "boolean", description: "Show diff of formatting changes" },
+      singleQuote: { type: "boolean", description: "Use single quotes" },
+      indentWidth: {
+        type: "number",
+        description: "Number of spaces for indentation",
+      },
+      lineWidth: { type: "number", description: "Maximum line width" },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_lint: {
-    type: 'object',
+    type: "object",
     properties: {
-      files: { type: 'array', items: { type: 'string' }, description: 'Files or directories to lint' },
-      rules: { type: 'array', items: { type: 'string' }, description: 'Specific rules to run' },
-      fix: { type: 'boolean', description: 'Automatically fix issues where possible' },
-      json: { type: 'boolean', description: 'Output in JSON format' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      files: {
+        type: "array",
+        items: { type: "string" },
+        description: "Files or directories to lint",
+      },
+      rules: {
+        type: "array",
+        items: { type: "string" },
+        description: "Specific rules to run",
+      },
+      fix: {
+        type: "boolean",
+        description: "Automatically fix issues where possible",
+      },
+      json: { type: "boolean", description: "Output in JSON format" },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_check: {
-    type: 'object',
+    type: "object",
     properties: {
-      files: { type: 'array', items: { type: 'string' }, description: 'Files to type check' },
-      all: { type: 'boolean', description: 'Type check all dependencies' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      files: {
+        type: "array",
+        items: { type: "string" },
+        description: "Files to type check",
+      },
+      all: { type: "boolean", description: "Type check all dependencies" },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_compile: {
-    type: 'object',
+    type: "object",
     properties: {
-      script: { type: 'string', description: 'Script to compile' },
-      output: { type: 'string', description: 'Output file name' },
-      target: { type: 'string', description: 'Target platform (e.g., x86_64-pc-windows-msvc)' },
-      permissions: { type: 'array', items: { type: 'string' }, description: 'Permissions to grant' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
+      script: { type: "string", description: "Script to compile" },
+      output: { type: "string", description: "Output file name" },
+      target: {
+        type: "string",
+        description: "Target platform (e.g., x86_64-pc-windows-msvc)",
+      },
+      permissions: {
+        type: "array",
+        items: { type: "string" },
+        description: "Permissions to grant",
+      },
+      workingDirectory: { type: "string", description: "Working directory" },
     },
-    required: ['script']
+    required: ["script"],
   },
 
   deno_info: {
-    type: 'object',
+    type: "object",
     properties: {
-      module: { type: 'string', description: 'Module to analyze' },
-      json: { type: 'boolean', description: 'Output in JSON format' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      module: { type: "string", description: "Module to analyze" },
+      json: { type: "boolean", description: "Output in JSON format" },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_doc: {
-    type: 'object',
+    type: "object",
     properties: {
-      source: { type: 'string', description: 'Source file or module to document' },
-      filter: { type: 'string', description: 'Filter symbols by name' },
-      json: { type: 'boolean', description: 'Output in JSON format' },
-      html: { type: 'boolean', description: 'Generate HTML documentation' },
-      output: { type: 'string', description: 'Output directory for HTML docs' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      source: {
+        type: "string",
+        description: "Source file or module to document",
+      },
+      filter: { type: "string", description: "Filter symbols by name" },
+      json: { type: "boolean", description: "Output in JSON format" },
+      html: { type: "boolean", description: "Generate HTML documentation" },
+      output: { type: "string", description: "Output directory for HTML docs" },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_add: {
-    type: 'object',
+    type: "object",
     properties: {
-      packages: { type: 'array', items: { type: 'string' }, description: 'Packages to add' },
-      dev: { type: 'boolean', description: 'Add as dev dependency' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
+      packages: {
+        type: "array",
+        items: { type: "string" },
+        description: "Packages to add",
+      },
+      dev: { type: "boolean", description: "Add as dev dependency" },
+      workingDirectory: { type: "string", description: "Working directory" },
     },
-    required: ['packages']
+    required: ["packages"],
   },
 
   deno_remove: {
-    type: 'object',
+    type: "object",
     properties: {
-      packages: { type: 'array', items: { type: 'string' }, description: 'Packages to remove' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
+      packages: {
+        type: "array",
+        items: { type: "string" },
+        description: "Packages to remove",
+      },
+      workingDirectory: { type: "string", description: "Working directory" },
     },
-    required: ['packages']
+    required: ["packages"],
   },
 
   deno_task: {
-    type: 'object',
+    type: "object",
     properties: {
-      task: { type: 'string', description: 'Task name to run' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      task: { type: "string", description: "Task name to run" },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_init: {
-    type: 'object',
+    type: "object",
     properties: {
-      name: { type: 'string', description: 'Project name' },
-      lib: { type: 'boolean', description: 'Initialize as library' },
-      serve: { type: 'boolean', description: 'Initialize with server template' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      name: { type: "string", description: "Project name" },
+      lib: { type: "boolean", description: "Initialize as library" },
+      serve: {
+        type: "boolean",
+        description: "Initialize with server template",
+      },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_upgrade: {
-    type: 'object',
+    type: "object",
     properties: {
-      version: { type: 'string', description: 'Specific version to upgrade to' },
-      canary: { type: 'boolean', description: 'Upgrade to canary version' },
-      dryRun: { type: 'boolean', description: 'Show what would be upgraded without doing it' },
-      force: { type: 'boolean', description: 'Force upgrade even if already up to date' }
-    }
+      version: {
+        type: "string",
+        description: "Specific version to upgrade to",
+      },
+      canary: { type: "boolean", description: "Upgrade to canary version" },
+      dryRun: {
+        type: "boolean",
+        description: "Show what would be upgraded without doing it",
+      },
+      force: {
+        type: "boolean",
+        description: "Force upgrade even if already up to date",
+      },
+    },
   },
 
   deno_bench: {
-    type: 'object',
+    type: "object",
     properties: {
-      pattern: { type: 'string', description: 'Benchmark file pattern' },
-      filter: { type: 'string', description: 'Filter benchmarks by name' },
-      json: { type: 'boolean', description: 'Output in JSON format' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      pattern: { type: "string", description: "Benchmark file pattern" },
+      filter: { type: "string", description: "Filter benchmarks by name" },
+      json: { type: "boolean", description: "Output in JSON format" },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_coverage: {
-    type: 'object',
+    type: "object",
     properties: {
-      coverageDir: { type: 'string', description: 'Coverage directory to analyze' },
-      html: { type: 'boolean', description: 'Generate HTML coverage report' },
-      lcov: { type: 'boolean', description: 'Generate LCOV coverage report' },
-      output: { type: 'string', description: 'Output file for coverage report' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
+      coverageDir: {
+        type: "string",
+        description: "Coverage directory to analyze",
+      },
+      html: { type: "boolean", description: "Generate HTML coverage report" },
+      lcov: { type: "boolean", description: "Generate LCOV coverage report" },
+      output: {
+        type: "string",
+        description: "Output file for coverage report",
+      },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
   },
 
   deno_types: {
-    type: 'object',
+    type: "object",
     properties: {
-      output: { type: 'string', description: 'Output file for type definitions' },
-      workingDirectory: { type: 'string', description: 'Working directory' }
-    }
-  }
+      output: {
+        type: "string",
+        description: "Output file for type definitions",
+      },
+      workingDirectory: { type: "string", description: "Working directory" },
+    },
+  },
 } as const;
