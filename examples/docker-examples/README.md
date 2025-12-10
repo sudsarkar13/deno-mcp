@@ -1,355 +1,364 @@
 # Docker Examples for Deno MCP Server
 
-This directory contains Docker configurations for running the Deno MCP server in containerized environments.
+This directory contains Docker configurations and examples for running and testing the Deno MCP Server in containerized environments.
 
-## Files Overview
+## 📁 File Structure
 
-- `Dockerfile` - Production-ready container
-- `Dockerfile.dev` - Development container with additional tools
-- `docker-compose.yml` - Multi-service configuration
-- `README.md` - This documentation
-
-## Quick Start
-
-### Using Docker Compose (Recommended)
-
-1. **Clone and navigate to the examples directory:**
-
-```bash
-git clone https://github.com/sudsarkar13/deno-mcp.git
-cd deno-mcp/examples/docker-examples
+```
+docker-examples/
+├── Dockerfile                    # Production Docker image
+├── Dockerfile.dev                # Development Docker image
+├── Dockerfile.test               # Basic testing Docker image
+├── Dockerfile.enhanced-test      # Comprehensive testing Docker image
+├── docker-test-runner.sh         # Enhanced test runner script
+├── docker-compose.yml            # Docker Compose configuration
+└── README.md                     # This documentation
 ```
 
-2. **Create a workspace directory:**
+## 🐳 Docker Configurations
 
-```bash
-mkdir workspace
-cd workspace
-# Add your Deno project files here
-```
+### 1. Production Image (`Dockerfile`)
 
-3. **Start the MCP server:**
+- **Purpose**: Optimized for production deployment
+- **Features**: Minimal size, security-hardened, non-root user
+- **Usage**: `docker build -f Dockerfile -t deno-mcp:prod .`
 
-```bash
-docker-compose up -d deno-mcp
-```
+### 2. Development Image (`Dockerfile.dev`)
 
-4. **View logs:**
+- **Purpose**: Development and debugging
+- **Features**: Includes dev tools, volume mounts, hot reload
+- **Usage**: `docker build -f Dockerfile.dev -t deno-mcp:dev .`
 
-```bash
-docker-compose logs -f deno-mcp
-```
+### 3. Basic Test Image (`Dockerfile.test`)
 
-### Using Docker directly
+- **Purpose**: Basic CI/CD testing
+- **Features**: Lightweight testing environment
+- **Usage**: `docker build -f Dockerfile.test -t deno-mcp:test .`
 
-1. **Build the image:**
+### 4. Enhanced Test Image (`Dockerfile.enhanced-test`)
 
-```bash
-docker build -t deno-mcp:latest .
-```
+- **Purpose**: Comprehensive testing and validation
+- **Features**: Full test suite, monitoring tools, detailed reporting
+- **Usage**: `docker build -f Dockerfile.enhanced-test -t deno-mcp:enhanced-test .`
 
-2. **Run the container:**
+## 🧪 Enhanced Testing Capabilities
 
-```bash
-docker run -d \
-  --name deno-mcp-server \
-  -v $(pwd)/workspace:/workspace \
-  -p 3000:3000 \
-  deno-mcp:latest
-```
+The enhanced test configuration provides comprehensive validation of the MCP server in a containerized environment.
 
-## Development Setup
+### Test Categories
 
-### Development Container
+#### 1. System Dependencies
 
-The development container includes additional tools for a complete development experience:
+- ✅ Node.js installation and version
+- ✅ Deno installation and version
+- ✅ NPM availability and version
 
-- Git
-- Vim/Nano editors
-- MCP Inspector
-- TypeScript
-- Nodemon
+#### 2. File System Structure
 
-1. **Start development environment:**
+- ✅ Build output availability
+- ✅ Test directory presence
+- ✅ Package configuration validation
 
-```bash
-docker-compose up -d deno-dev
-```
+#### 3. Security and Permissions
 
-2. **Access the development container:**
+- ✅ Non-root user execution
+- ✅ File permissions verification
+- ✅ Security best practices compliance
 
-```bash
-docker-compose exec deno-dev bash
-```
+#### 4. MCP Server Functionality
 
-3. **Inside the container, you can:**
+- ✅ Server startup and version check
+- ✅ Graceful shutdown handling
+- ✅ Process lifecycle management
 
-```bash
-# Initialize a new Deno project
-deno init my-project
-cd my-project
+#### 5. Test Suite Execution
 
-# Start the MCP server for inspection
-deno-inspect /usr/local/bin/deno-mcp
+- ✅ Node.js test suite execution
+- ✅ Cross-platform compatibility
+- ✅ Error handling and reporting
 
-# Run Deno commands
-deno --version
-deno fmt
-deno lint
-deno test
-```
+#### 6. Environment Configuration
 
-### VS Code Remote Development
+- ✅ Environment variables validation
+- ✅ Deno environment setup
+- ✅ Node.js environment configuration
 
-The development container is configured for VS Code remote development:
+#### 7. Resource Monitoring
 
-1. **Install VS Code extensions:**
-   - Remote-Containers
-   - Deno extension
+- ✅ Memory usage tracking
+- ✅ CPU utilization monitoring
+- ✅ Disk usage analysis
 
-2. **Open in container:**
-   - Open VS Code
-   - Press `Ctrl+Shift+P`
-   - Select "Remote-Containers: Reopen in Container"
+#### 8. Network Connectivity
 
-3. **Configure VS Code settings in container:**
+- ✅ External network access validation
+- ✅ DNS resolution testing
+
+#### 9. Container Health
+
+- ✅ Health check validation
+- ✅ Container lifecycle verification
+
+### Test Results
+
+The enhanced test runner generates detailed JSON reports with:
+
+- Individual test results with timestamps
+- Pass/fail status for each test
+- Detailed error messages for failures
+- Overall success rate calculation
+- Environment metadata
+
+Example test results structure:
 
 ```json
 {
-  "deno.enable": true,
-  "deno.lint": true,
-  "deno.unstable": false,
-  "deno.path": "/usr/local/bin/deno"
+  "tests": [
+    {
+      "name": "Node.js Installation",
+      "status": "PASS",
+      "message": "Node.js version: v20.x.x",
+      "timestamp": "2024-12-11T01:30:00Z"
+    }
+  ],
+  "summary": {
+    "tests_passed": 12,
+    "tests_failed": 0,
+    "total_tests": 12,
+    "success_rate": 100,
+    "timestamp": "2024-12-11T01:35:00Z",
+    "environment": "docker-container"
+  }
 }
 ```
 
-## Configuration Examples
+## 🚀 Usage Examples
+
+### Basic Testing
+
+```bash
+# Build and run basic test
+docker build -f Dockerfile.test -t deno-mcp:test .
+docker run --rm deno-mcp:test
+```
+
+### Enhanced Testing
+
+```bash
+# Build enhanced test image
+docker build -f Dockerfile.enhanced-test -t deno-mcp:enhanced-test .
+
+# Run comprehensive test suite
+docker run --rm -v $(pwd)/test-results:/test-results deno-mcp:enhanced-test
+
+# View test results
+cat test-results/docker-test-results.json | jq '.summary'
+```
+
+### Development Environment
+
+```bash
+# Build development image
+docker build -f Dockerfile.dev -t deno-mcp:dev .
+
+# Run with volume mounts for development
+docker run -it --rm -v $(pwd):/workspace deno-mcp:dev bash
+```
+
+### Production Deployment
+
+```bash
+# Build production image
+docker build -f Dockerfile -t deno-mcp:prod .
+
+# Run production container
+docker run -d --name mcp-server deno-mcp:prod
+```
+
+## 🔧 CI/CD Integration
+
+The Docker configurations are integrated into the GitHub Actions CI/CD pipeline:
+
+### Matrix Testing
+
+- **Basic Test**: Quick validation of core functionality
+- **Enhanced Test**: Comprehensive test suite with detailed reporting
+
+### Automated Workflows
+
+1. **Build Phase**: Creates Docker images for testing
+2. **Test Phase**: Runs both basic and enhanced test suites
+3. **Validation Phase**: Analyzes test results and reports failures
+4. **Artifact Phase**: Uploads test results for review
+
+### Test Result Processing
+
+- Automatic extraction of test results from containers
+- JSON-formatted reports for easy parsing
+- Integration with GitHub Actions summary reports
+- Failure detection and pipeline blocking
+
+## 🛠 Customization
 
 ### Environment Variables
 
-Set these environment variables for customization:
-
 ```bash
-# Docker run example
-docker run -d \
-  --name deno-mcp-server \
-  -e DENO_DIR=/home/denouser/.deno \
-  -e LOG_LEVEL=info \
-  -v $(pwd)/workspace:/workspace \
-  -p 3000:3000 \
-  deno-mcp:latest
+# Customize test behavior
+docker run --rm \
+  -e NODE_ENV=test \
+  -e DENO_DIR=/custom/deno \
+  -e TEST_TIMEOUT=30000 \
+  deno-mcp:enhanced-test
 ```
 
 ### Volume Mounts
 
-Mount your project and persist Deno cache:
+```bash
+# Mount custom test configurations
+docker run --rm \
+  -v $(pwd)/custom-tests:/app/test \
+  -v $(pwd)/test-results:/test-results \
+  deno-mcp:enhanced-test
+```
+
+### Network Configuration
 
 ```bash
-docker run -d \
-  --name deno-mcp-server \
-  -v $(pwd)/workspace:/workspace \
-  -v deno-cache:/home/denouser/.deno \
-  -p 3000:3000 \
-  deno-mcp:latest
+# Run with custom network settings
+docker run --rm \
+  --network=custom-network \
+  --dns=8.8.8.8 \
+  deno-mcp:enhanced-test
 ```
 
-## MCP Client Configuration
-
-### Claude Desktop
-
-Configure Claude Desktop to use the containerized MCP server:
-
-```json
-{
-  "mcpServers": {
-    "deno-mcp": {
-      "command": "docker",
-      "args": [
-        "exec",
-        "deno-mcp-server",
-        "deno-mcp"
-      ],
-      "env": {
-        "DENO_DIR": "/home/denouser/.deno"
-      }
-    }
-  }
-}
-```
-
-### Alternative: Host Network Mode
-
-For easier client configuration, use host network mode:
-
-```bash
-docker run -d \
-  --name deno-mcp-server \
-  --network host \
-  -v $(pwd)/workspace:/workspace \
-  deno-mcp:latest
-```
-
-Then configure clients normally:
-
-```json
-{
-  "mcpServers": {
-    "deno-mcp": {
-      "command": "deno-mcp",
-      "args": []
-    }
-  }
-}
-```
-
-## Troubleshooting
-
-### Common Issues
-
-1. **Permission denied errors:**
-
-```bash
-# Fix file permissions
-sudo chown -R 1001:1001 workspace/
-```
-
-2. **Port already in use:**
-
-```bash
-# Change the port mapping
-docker run -p 3001:3000 deno-mcp:latest
-```
-
-3. **Deno cache issues:**
-
-```bash
-# Clear the cache volume
-docker volume rm docker-examples_deno-cache
-```
-
-### Debugging
-
-1. **Access container shell:**
-
-```bash
-docker-compose exec deno-mcp sh
-```
-
-2. **View container logs:**
-
-```bash
-docker-compose logs deno-mcp
-```
-
-3. **Inspect container:**
-
-```bash
-docker inspect deno-mcp-server
-```
-
-### Performance Tuning
-
-1. **Resource limits in docker-compose.yml:**
-
-```yaml
-deploy:
-  resources:
-    limits:
-      memory: 1G
-      cpus: '1.0'
-```
-
-2. **Optimize Deno cache:**
-
-```bash
-# Pre-cache common modules
-docker-compose exec deno-mcp deno cache https://deno.land/std/http/server.ts
-```
-
-## Security Considerations
-
-1. **Non-root user:** Containers run as `denouser` (UID 1001)
-2. **Limited permissions:** Only necessary permissions granted
-3. **Isolated network:** Use custom Docker networks for isolation
-4. **Read-only filesystem:** Consider making containers read-only where possible
-
-### Production Security
-
-```bash
-# Run with read-only root filesystem
-docker run -d \
-  --name deno-mcp-server \
-  --read-only \
-  --tmpfs /tmp \
-  -v $(pwd)/workspace:/workspace \
-  deno-mcp:latest
-```
-
-## CI/CD Integration
-
-### GitHub Actions Example
-
-```yaml
-name: Test Deno MCP Docker
-on: [push, pull_request]
-
-jobs:
-  docker-test:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      
-      - name: Build Docker image
-        run: docker build -t deno-mcp:test ./examples/docker-examples
-      
-      - name: Test container
-        run: |
-          docker run -d --name test-container deno-mcp:test
-          sleep 5
-          docker exec test-container deno --version
-          docker stop test-container
-```
-
-### GitLab CI Example
-
-```yaml
-test-docker:
-  image: docker:latest
-  services:
-    - docker:dind
-  script:
-    - cd examples/docker-examples
-    - docker build -t deno-mcp:test .
-    - docker run --rm deno-mcp:test deno --version
-```
-
-## Advanced Usage
-
-### Multi-stage Builds
-
-For optimized production images:
-
-```dockerfile
-# Build stage
-FROM node:20-alpine AS builder
-RUN curl -fsSL https://deno.land/install.sh | sh
-RUN npm install -g @sudsarkar13/deno-mcp
-
-# Production stage
-FROM alpine:latest
-RUN apk add --no-cache nodejs npm
-COPY --from=builder /root/.deno/bin/deno /usr/local/bin/
-COPY --from=builder /usr/local/lib/node_modules/@sudsarkar13 /usr/local/lib/node_modules/@sudsarkar13
-CMD ["deno-mcp"]
-```
+## 📊 Monitoring and Debugging
 
 ### Health Checks
 
-Add health checks to your containers:
+All Docker images include health check configurations:
 
 ```dockerfile
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD deno --version || exit 1
+  CMD node /app/build/index.js --version || exit 1
 ```
 
-This Docker setup provides a robust, secure, and scalable way to deploy and develop with the Deno MCP server.
+### Logging
+
+- Structured logging with timestamps
+- Color-coded output for easy reading
+- JSON-formatted results for automation
+- Detailed error messages and stack traces
+
+### Resource Monitoring
+
+The enhanced test suite includes resource monitoring:
+
+- Memory usage tracking
+- CPU utilization analysis
+- Disk space monitoring
+- Network connectivity validation
+
+## 🔒 Security Considerations
+
+### Non-root Execution
+
+All containers run as non-root users:
+
+```dockerfile
+RUN addgroup -g 1001 -S denouser && adduser -S denouser -u 1001
+USER denouser
+```
+
+### Minimal Attack Surface
+
+- Alpine Linux base for smaller image size
+- Only necessary packages installed
+- Security scanning integrated into CI/CD
+
+### Permission Management
+
+- Proper file permissions set during build
+- Workspace directories owned by application user
+- Sensitive files protected with appropriate permissions
+
+## 🚨 Troubleshooting
+
+### Common Issues
+
+#### Test Failures
+
+```bash
+# Check test logs
+docker run --rm deno-mcp:enhanced-test 2>&1 | tee test-logs.txt
+
+# Debug specific test failures
+docker run --rm -it deno-mcp:enhanced-test bash
+```
+
+#### Permission Issues
+
+```bash
+# Fix file permissions
+chmod +x examples/docker-examples/docker-test-runner.sh
+
+# Verify container user
+docker run --rm deno-mcp:enhanced-test whoami
+```
+
+#### Network Issues
+
+```bash
+# Test network connectivity
+docker run --rm deno-mcp:enhanced-test ping -c 1 google.com
+
+# Check DNS resolution
+docker run --rm deno-mcp:enhanced-test nslookup google.com
+```
+
+### Debug Mode
+
+```bash
+# Run with debug output
+docker run --rm -e DEBUG=1 deno-mcp:enhanced-test
+
+# Interactive debugging
+docker run --rm -it deno-mcp:enhanced-test bash
+```
+
+## 📈 Performance Optimization
+
+### Build Optimization
+
+- Multi-stage builds for smaller images
+- Layer caching for faster builds
+- Dependency caching strategies
+
+### Runtime Optimization
+
+- Resource limits and requests
+- Health check intervals
+- Startup probes for faster deployment
+
+### Test Optimization
+
+- Parallel test execution
+- Smart test selection
+- Result caching
+
+## 🔄 Maintenance
+
+### Regular Updates
+
+- Base image updates for security patches
+- Dependency updates for latest features
+- Test suite enhancements for better coverage
+
+### Monitoring
+
+- Container performance metrics
+- Test result trends
+- Failure pattern analysis
+
+---
+
+For more information about the Deno MCP Server project, see the main [README.md](../../README.md) file.

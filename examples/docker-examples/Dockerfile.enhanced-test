@@ -1,0 +1,65 @@
+# Enhanced Deno MCP Server Test Docker Configuration
+# This configuration provides comprehensive testing capabilities
+FROM node:20-alpine
+
+# Install system dependencies including testing tools
+RUN apk add --no-cache \
+    curl \
+    unzip \
+    bash \
+    jq \
+    netcat-openbsd \
+    procps \
+    htop
+
+# Install Deno
+RUN curl -fsSL https://deno.land/install.sh | sh \
+    && mv /root/.deno/bin/deno /usr/local/bin/deno \
+    && chmod +x /usr/local/bin/deno
+
+# Set working directory
+WORKDIR /app
+
+# Copy package.json and package-lock.json first for better caching
+COPY package*.json ./
+
+# Install dependencies including dev dependencies for testing
+RUN npm ci
+
+# Copy the built application and test files
+COPY build/ ./build/
+COPY test/ ./test/
+COPY README.md LICENSE ./
+
+# Make the binary executable
+RUN chmod +x build/index.js
+
+# Create a non-root user for security
+RUN addgroup -g 1001 -S denouser \
+    && adduser -S denouser -u 1001
+
+# Create workspace and test directories
+RUN mkdir -p /workspace /test-results && \
+    chown denouser:denouser /workspace /test-results
+
+# Copy enhanced test script
+COPY examples/docker-examples/docker-test-runner.sh /usr/local/bin/test-runner.sh
+RUN chmod +x /usr/local/bin/test-runner.sh
+
+# Switch to non-root user
+USER denouser
+
+# Set environment variables
+ENV DENO_DIR=/home/denouser/.deno
+ENV PATH=/usr/local/bin:/usr/bin:/bin
+ENV NODE_ENV=test
+
+# Set default working directory
+WORKDIR /workspace
+
+# Health check to ensure the container is working
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD node /app/build/index.js --version || exit 1
+
+# Default command runs the comprehensive test suite
+CMD ["/usr/local/bin/test-runner.sh"]

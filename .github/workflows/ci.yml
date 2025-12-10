@@ -132,6 +132,12 @@ jobs:
     runs-on: ubuntu-latest
     needs: [build, test]
     if: github.event_name == 'push'
+    strategy:
+      matrix:
+        docker-config: [
+          { file: 'Dockerfile.test', tag: 'deno-mcp:basic-test', name: 'basic-test' },
+          { file: 'Dockerfile.enhanced-test', tag: 'deno-mcp:enhanced-test', name: 'enhanced-test' }
+        ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -145,31 +151,89 @@ jobs:
           name: build-files
           path: build/
 
-      - name: Build Docker image
+      - name: Build Docker image (${{ matrix.docker-config.name }})
         uses: docker/build-push-action@v5
         with:
           context: .
-          file: examples/docker-examples/Dockerfile.test
-          tags: deno-mcp:test
+          file: examples/docker-examples/${{ matrix.docker-config.file }}
+          tags: ${{ matrix.docker-config.tag }}
           load: true
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Test Docker container
+      - name: Test Docker container (${{ matrix.docker-config.name }})
         run: |
-          # Start container
-          docker run -d --name test-container deno-mcp:test
-          sleep 10
+          echo "🐳 Testing Docker configuration: ${{ matrix.docker-config.name }}"
           
-          # Check if container is running
-          docker ps | grep test-container
-          
-          # Test Deno installation in container
-          docker exec test-container deno --version
-          
-          # Cleanup
-          docker stop test-container
-          docker rm test-container
+          if [[ "${{ matrix.docker-config.name }}" == "basic-test" ]]; then
+            # Basic test - original functionality
+            docker run -d --name test-container-basic ${{ matrix.docker-config.tag }}
+            sleep 10
+            
+            # Check if container is running
+            docker ps | grep test-container-basic
+            
+            # Test Deno installation in container
+            docker exec test-container-basic deno --version
+            
+            # Cleanup
+            docker stop test-container-basic
+            docker rm test-container-basic
+            
+          elif [[ "${{ matrix.docker-config.name }}" == "enhanced-test" ]]; then
+            # Enhanced test - comprehensive test suite
+            echo "🚀 Running comprehensive Docker test suite..."
+            
+            # Create volume for test results
+            docker volume create test-results-vol
+            
+            # Run enhanced test container
+            docker run --rm \
+              --name test-container-enhanced \
+              -v test-results-vol:/test-results \
+              ${{ matrix.docker-config.tag }}
+            
+            # Extract test results
+            docker run --rm \
+              -v test-results-vol:/test-results \
+              -v $PWD:/output \
+              alpine:latest sh -c "
+                if [ -f /test-results/docker-test-results.json ]; then
+                  cp /test-results/docker-test-results.json /output/docker-test-results-${{ matrix.docker-config.name }}.json
+                  echo '✅ Test results extracted successfully'
+                else
+                  echo '❌ No test results found'
+                  exit 1
+                fi
+              "
+            
+            # Display test summary
+            if [ -f "docker-test-results-${{ matrix.docker-config.name }}.json" ]; then
+              echo "📊 Docker Test Results Summary:"
+              jq -r '.summary | "Total Tests: \(.total_tests), Passed: \(.tests_passed), Failed: \(.tests_failed), Success Rate: \(.success_rate)%"' docker-test-results-${{ matrix.docker-config.name }}.json
+              
+              # Check if all tests passed
+              FAILED_TESTS=$(jq -r '.summary.tests_failed' docker-test-results-${{ matrix.docker-config.name }}.json)
+              if [ "$FAILED_TESTS" -gt 0 ]; then
+                echo "❌ Some Docker tests failed"
+                jq -r '.tests[] | select(.status == "FAIL") | "❌ \(.name): \(.message)"' docker-test-results-${{ matrix.docker-config.name }}.json
+                exit 1
+              else
+                echo "✅ All Docker tests passed!"
+              fi
+            fi
+            
+            # Cleanup
+            docker volume rm test-results-vol
+          fi
+
+      - name: Upload Docker test results
+        if: always() && matrix.docker-config.name == 'enhanced-test'
+        uses: actions/upload-artifact@v4
+        with:
+          name: docker-test-results-${{ matrix.docker-config.name }}
+          path: docker-test-results-*.json
+          retention-days: 7
 
   # Publish to NPM (only on version tags)
   publish-npm:
