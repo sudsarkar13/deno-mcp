@@ -117,8 +117,14 @@ test('MCP Server - Should handle process termination correctly', async (t) => {
 
     // Cross-platform exit verification
     if (process.platform === 'win32') {
-      // Windows: Check for clean exit code or null signal
-      assert.ok(code === 0 || code === 1 || signal === null, `Process should exit cleanly on Windows, got code: ${code}, signal: ${signal}`);
+      // Windows: Process terminated with SIGINT returns code: null, signal: 'SIGINT'
+      // or clean exit with code 0/1
+      assert.ok(
+        (code === null && signal === 'SIGINT') || 
+        code === 0 || 
+        code === 1, 
+        `Process should exit cleanly on Windows, got code: ${code}, signal: ${signal}`
+      );
     } else {
       // Unix: Check for SIGTERM or clean exit
       assert.ok(code === 0 || signal === 'SIGTERM', `Process should exit cleanly on Unix, got code: ${code}, signal: ${signal}`);
