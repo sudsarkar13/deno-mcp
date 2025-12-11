@@ -1,11 +1,13 @@
 # Deno MCP Server CI Test Docker Configuration
-FROM node:20-alpine
+FROM node:20-slim
 
 # Install system dependencies
-RUN apk add --no-cache \
+RUN apt-get update && apt-get install -y \
     curl \
     unzip \
-    bash
+    bash \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
 
 # Install Deno
 RUN curl -fsSL https://deno.land/install.sh | sh \
@@ -29,8 +31,8 @@ COPY README.md LICENSE ./
 RUN chmod +x build/index.js
 
 # Create a non-root user for security
-RUN addgroup -g 1001 -S denouser \
-    && adduser -S denouser -u 1001
+RUN groupadd -g 1001 denouser \
+    && useradd -r -u 1001 -g denouser denouser
 
 # Create workspace directory
 RUN mkdir -p /workspace && chown denouser:denouser /workspace
