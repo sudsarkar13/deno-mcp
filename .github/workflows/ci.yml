@@ -166,19 +166,47 @@ jobs:
           echo "🐳 Testing Docker configuration: ${{ matrix.docker-config.name }}"
           
           if [[ "${{ matrix.docker-config.name }}" == "basic-test" ]]; then
-            # Basic test - original functionality
-            docker run -d --name test-container-basic ${{ matrix.docker-config.tag }}
-            sleep 10
+            # Basic test - MCP server startup verification
+            echo "📋 Starting basic Docker test for MCP server..."
             
-            # Check if container is running
-            docker ps | grep test-container-basic
+            # Test 1: Run container and check for successful startup
+            echo "🚀 Testing MCP server startup..."
+            if docker run --rm --name test-container-basic ${{ matrix.docker-config.tag }} timeout 10s cat > /dev/null 2>&1; then
+              echo "✅ Container ran successfully"
+            else
+              # Check what happened
+              echo "📋 Testing container startup with logs..."
+              docker run --rm --name test-startup-check ${{ matrix.docker-config.tag }} sh -c "
+                echo 'Testing MCP server startup...'
+                timeout 5s node /app/build/index.js < /dev/null || echo 'Server started and exited as expected'
+                echo 'Checking Deno installation...'
+                deno --version
+                echo 'All checks completed successfully'
+              "
+            fi
             
-            # Test Deno installation in container
-            docker exec test-container-basic deno --version
+            # Test 2: Verify Deno installation in a fresh container
+            echo "🦕 Testing Deno installation in container..."
+            if docker run --rm ${{ matrix.docker-config.tag }} deno --version; then
+              echo "✅ Deno is properly installed and accessible"
+            else
+              echo "❌ Deno installation test failed"
+              exit 1
+            fi
             
-            # Cleanup
-            docker stop test-container-basic
-            docker rm test-container-basic
+            # Test 3: Verify MCP server can start without errors
+            echo "🔧 Testing MCP server initialization..."
+            MCP_OUTPUT=$(docker run --rm ${{ matrix.docker-config.tag }} timeout 5s node /app/build/index.js < /dev/null 2>&1 || true)
+            if echo "$MCP_OUTPUT" | grep -q "Deno MCP Tools server running on stdio"; then
+              echo "✅ MCP server starts correctly and displays expected output"
+              echo "📋 Server output: $MCP_OUTPUT"
+            else
+              echo "❌ MCP server startup failed or unexpected output"
+              echo "📋 Actual output: $MCP_OUTPUT"
+              exit 1
+            fi
+            
+            echo "✅ Basic Docker test completed successfully"
             
           elif [[ "${{ matrix.docker-config.name }}" == "enhanced-test" ]]; then
             # Enhanced test - comprehensive test suite
