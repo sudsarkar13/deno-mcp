@@ -1,5 +1,5 @@
 #!/bin/bash
-set -euo pipefail
+set -euxo pipefail
 
 # Enhanced Docker Test Runner for Deno MCP Server
 # This script runs comprehensive tests inside the Docker container
@@ -31,24 +31,30 @@ log_test_result() {
     
     if [[ "$status" == "PASS" ]]; then
         echo -e "${GREEN}✅ $test_name: PASSED${NC}"
-        ((TESTS_PASSED++))
+        TESTS_PASSED=$((TESTS_PASSED + 1))
     else
         echo -e "${RED}❌ $test_name: FAILED - $message${NC}"
-        ((TESTS_FAILED++))
+        TESTS_FAILED=$((TESTS_FAILED + 1))
     fi
     
     # Update JSON results (with error handling)
     if command -v jq >/dev/null 2>&1; then
-        jq --arg name "$test_name" \
-           --arg status "$status" \
-           --arg message "$message" \
-           --arg timestamp "$timestamp" \
-           '.tests += [{"name": $name, "status": $status, "message": $message, "timestamp": $timestamp}]' \
-           "$TEST_RESULTS_FILE" > "${TEST_RESULTS_FILE}.tmp" && mv "${TEST_RESULTS_FILE}.tmp" "$TEST_RESULTS_FILE" || {
-           echo "Warning: Failed to update JSON results"
-        }
+        local updated_json
+        updated_json=$(jq \
+            --arg name "$test_name" \
+            --arg status "$status" \
+            --arg msg "$message" \
+            --arg ts "$timestamp" \
+            '.tests += [{
+                "name": $name,
+                "status": $status,
+                "message": $msg,
+                "timestamp": $ts
+            }]' \
+            "$TEST_RESULTS_FILE")
+        echo "$updated_json" > "$TEST_RESULTS_FILE"
     else
-        echo "Warning: jq not available for JSON processing"
+        echo "DEBUG: jq not found, bypassing JSON log for test '$test_name'"
     fi
 }
 
@@ -61,22 +67,32 @@ else
     log_test_result "Node.js Installation" "FAIL" "Node.js not found"
 fi
 
+echo "DEBUG: About to check for Deno..."
+
 if command -v deno >/dev/null 2>&1; then
-    # Try to get Deno version with longer timeout and better error handling
-    DENO_VERSION=$(timeout 10 bash -c 'deno --version 2>/dev/null' | head -n1 || echo "installed but version check failed")
-    if [[ "$DENO_VERSION" == "installed but version check failed" ]]; then
-        # Try alternative approach - check if deno binary exists and is executable
-        if [[ -x "$(command -v deno)" ]]; then
-            log_test_result "Deno Installation" "PASS" "Deno binary found and executable (version check failed)"
-        else
-            log_test_result "Deno Installation" "FAIL" "Deno binary not executable"
-        fi
-    else
+    echo "DEBUG: Deno command was found in PATH."
+    echo "Deno command found, attempting to get version..."
+    # Try to get Deno version with a timeout.
+    # The '|| true' part ensures that this command doesn't cause the script to exit on failure (due to set -e).
+    deno_version_output=$(timeout 10 deno --version 2>/dev/null || true)
+
+    if [[ -n "$deno_version_output" ]]; then
+        DENO_VERSION=$(echo "$deno_version_output" | head -n 1)
         log_test_result "Deno Installation" "PASS" "Deno version: $DENO_VERSION"
+    else
+        # If version check fails or times out, check if the binary is at least executable.
+        if [[ -x "$(command -v deno)" ]]; then
+            log_test_result "Deno Installation" "PASS" "Deno binary found and executable (version check timed out or failed)"
+        else
+            log_test_result "Deno Installation" "FAIL" "Deno command found but binary not executable"
+        fi
     fi
 else
-    log_test_result "Deno Installation" "FAIL" "Deno not found"
+    echo "DEBUG: Deno command was NOT found in PATH."
+    log_test_result "Deno Installation" "FAIL" "Deno command not found in PATH"
 fi
+
+echo "DEBUG: Deno check finished. About to check for NPM..."
 
 if command -v npm >/dev/null 2>&1; then
     NPM_VERSION=$(npm --version)
@@ -146,7 +162,7 @@ fi
 
 # Test 5: Node.js Test Suite
 echo -e "\n${BLUE}🧪 Running Node.js Test Suite${NC}"
-if npm test 2>/dev/null; then
+if npm test; then
     log_test_result "Node.js Test Suite" "PASS" "All Node.js tests passed"
 else
     log_test_result "Node.js Test Suite" "FAIL" "Some Node.js tests failed"

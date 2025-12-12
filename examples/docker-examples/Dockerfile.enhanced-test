@@ -24,21 +24,20 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json first for better caching
 COPY package*.json ./
+COPY tsconfig.json ./
+COPY src/ ./src/
 
-# Install only runtime dependencies (no build step needed)
-RUN npm ci --only=production --ignore-scripts
+# Install dependencies
+RUN npm ci --ignore-scripts
 
-# Copy the pre-built application and test files
-COPY build/ ./build/
+# Copy test files
 COPY test/ ./test/
 COPY README.md LICENSE ./
 
-# Make the binary executable
-RUN chmod +x build/index.js
-
 # Create a non-root user for security
 RUN groupadd -g 1001 denouser \
-    && useradd -u 1001 -g denouser -m denouser
+    && useradd -u 1001 -g denouser -m denouser \
+    && chown -R denouser:denouser /app
 
 # Create workspace and test directories
 RUN mkdir -p /workspace /test-results && \
@@ -59,9 +58,6 @@ ENV NODE_ENV=test
 # Set default working directory
 WORKDIR /workspace
 
-# Health check to ensure the container is working
-HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-  CMD node /app/build/index.js --version || exit 1
 
 # Default command runs the comprehensive test suite
 CMD ["/usr/local/bin/test-runner.sh"]
