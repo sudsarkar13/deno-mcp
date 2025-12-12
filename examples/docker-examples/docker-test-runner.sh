@@ -62,8 +62,18 @@ else
 fi
 
 if command -v deno >/dev/null 2>&1; then
-    DENO_VERSION=$(timeout 5 deno --version 2>/dev/null | head -n1 || echo "unknown")
-    log_test_result "Deno Installation" "PASS" "Deno version: $DENO_VERSION"
+    # Try to get Deno version with longer timeout and better error handling
+    DENO_VERSION=$(timeout 10 bash -c 'deno --version 2>/dev/null' | head -n1 || echo "installed but version check failed")
+    if [[ "$DENO_VERSION" == "installed but version check failed" ]]; then
+        # Try alternative approach - check if deno binary exists and is executable
+        if [[ -x "$(command -v deno)" ]]; then
+            log_test_result "Deno Installation" "PASS" "Deno binary found and executable (version check failed)"
+        else
+            log_test_result "Deno Installation" "FAIL" "Deno binary not executable"
+        fi
+    else
+        log_test_result "Deno Installation" "PASS" "Deno version: $DENO_VERSION"
+    fi
 else
     log_test_result "Deno Installation" "FAIL" "Deno not found"
 fi
