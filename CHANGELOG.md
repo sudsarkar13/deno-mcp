@@ -5,6 +5,31 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.1] - 2024-12-12
+
+### Changed
+
+#### CI/CD Pipeline Improvements
+
+- **GitHub Release First**: Restructured CI/CD pipeline to create GitHub releases before NPM publishing
+- **Improved Release Flow**: GitHub release creation now happens immediately after successful build and tests
+- **NPM Publishing**: NPM publish now depends on successful GitHub release creation
+- **Docker Publishing**: Docker image publishing also depends on GitHub release creation
+- **Better Dependency Management**: Updated job dependencies for more reliable release process
+
+#### Workflow Enhancements
+
+- **Release Order**: Fixed release workflow to follow proper sequence: Tests → GitHub Release → NPM Publish → Docker Publish
+- **Error Prevention**: Prevents NPM publishing if GitHub release creation fails
+- **Consistency**: Ensures all releases are properly documented on GitHub before distribution
+- **Reliability**: Improved overall release pipeline reliability and error handling
+
+### Technical Details
+
+- **Job Dependencies**: Updated CI/CD job dependencies to enforce correct execution order
+- **Release Validation**: Added validation to ensure GitHub releases are created successfully
+- **Pipeline Optimization**: Streamlined release process for better maintainability
+
 ## [1.0.0] - 2024-12-09
 
 ### Added
