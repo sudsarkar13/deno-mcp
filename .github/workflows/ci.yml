@@ -101,7 +101,12 @@ jobs:
       - name: Verify downloaded artifacts
         run: |
           echo "Downloaded artifacts to build/ directory:"
-          ls -la build/ || echo "Build directory is empty or missing"
+          if [ "$RUNNER_OS" = "Windows" ]; then
+            dir build\ 2>nul || echo "Build directory is empty or missing"
+          else
+            ls -la build/ || echo "Build directory is empty or missing"
+          fi
+        shell: bash
 
       - name: Make binary executable (Unix)
         if: runner.os != 'Windows'
@@ -170,6 +175,7 @@ jobs:
         run: |
           echo "Downloaded artifacts to build/ directory:"
           ls -la build/ || echo "Build directory is empty or missing"
+        shell: bash
 
       - name: Build Docker image (${{ matrix.docker-config.name }})
         uses: docker/build-push-action@v5
@@ -321,6 +327,7 @@ jobs:
         run: |
           echo "Downloaded artifacts to build/ directory:"
           ls -la build/ || echo "Build directory is empty or missing"
+        shell: bash
 
       - name: Create release archive
         run: |
@@ -379,6 +386,7 @@ jobs:
         run: |
           echo "Downloaded artifacts to build/ directory:"
           ls -la build/ || echo "Build directory is empty or missing"
+        shell: bash
 
       - name: Verify package.json version matches tag
         run: |
@@ -457,6 +465,7 @@ jobs:
         run: |
           echo "Downloaded artifacts to build/ directory:"
           ls -la build/ || echo "Build directory is empty or missing"
+        shell: bash
 
       - name: Build and push Docker images
         uses: docker/build-push-action@v5
