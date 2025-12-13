@@ -8,7 +8,7 @@ RUN apk add --no-cache curl unzip ca-certificates \
         aarch64) DENO_ARCH="aarch64" ;; \
         *) echo "Unsupported architecture: $(uname -m)" && exit 1 ;; \
     esac \
-    && DENO_VERSION="v1.47.2" \
+    && DENO_VERSION="v2.6.0" \
     && curl -fsSL "https://github.com/denoland/deno/releases/download/${DENO_VERSION}/deno-${DENO_ARCH}-unknown-linux-gnu.zip" -o deno.zip \
     && unzip deno.zip \
     && chmod +x deno \
