@@ -1,8 +1,8 @@
 # Deno MCP Server Docker Configuration
-FROM node:20-alpine
+FROM node:20-slim
 
 # Install system dependencies and Deno with cross-platform support
-RUN apk add --no-cache curl unzip ca-certificates \
+RUN apt-get update && apt-get install -y curl unzip ca-certificates --no-install-recommends \
     && case "$(uname -m)" in \
         x86_64) DENO_ARCH="x86_64" ;; \
         aarch64) DENO_ARCH="aarch64" ;; \
@@ -13,7 +13,9 @@ RUN apk add --no-cache curl unzip ca-certificates \
     && unzip deno.zip \
     && chmod +x deno \
     && mv deno /usr/local/bin/deno \
-    && rm deno.zip
+    && rm deno.zip \
+    && apt-get clean \
+    && rm -rf /var/lib/apt/lists/*
 
 # Set working directory
 WORKDIR /app
@@ -31,8 +33,8 @@ COPY build/ ./build/
 RUN chmod +x ./build/index.js
 
 # Create a non-root user for security
-RUN addgroup -g 1001 -S denouser \
-    && adduser -S denouser -u 1001 \
+RUN groupadd -g 1001 denouser \
+    && useradd -r -u 1001 -g denouser denouser \
     && chown -R denouser:denouser /app
 
 # Create workspace directory
