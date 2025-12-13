@@ -24,16 +24,16 @@ Add to your `claude_desktop_config.json`:
 
 ```json
 {
-  "mcpServers": {
-    "deno-mcp": {
-      "command": "deno-mcp",
-      "args": [],
-      "env": {
-        "DENO_DIR": "/home/user/.deno",
-        "PATH": "/home/user/.deno/bin:/usr/local/bin:/usr/bin:/bin"
-      }
-    }
+ "mcpServers": {
+  "deno-mcp": {
+   "command": "deno-mcp",
+   "args": [],
+   "env": {
+    "DENO_DIR": "/home/user/.deno",
+    "PATH": "/home/user/.deno/bin:/usr/local/bin:/usr/bin:/bin"
+   }
   }
+ }
 }
 ```
 
@@ -43,13 +43,13 @@ Add to your `config.json`:
 
 ```json
 {
-  "mcpServers": [
-    {
-      "name": "deno-mcp",
-      "command": "deno-mcp",
-      "args": []
-    }
-  ]
+ "mcpServers": [
+  {
+   "name": "deno-mcp",
+   "command": "deno-mcp",
+   "args": []
+  }
+ ]
 }
 ```
 
@@ -61,6 +61,7 @@ Add to your `config.json`:
 User: "Create a new Deno web server project"
 
 AI Assistant will use:
+
 - deno_init: Initialize new project
 - deno_add: Add dependencies like @std/http
 - deno_fmt: Format the generated code
@@ -73,6 +74,7 @@ AI Assistant will use:
 User: "Format my code, run tests, and check for linting issues"
 
 AI Assistant will use:
+
 - deno_fmt: Format all TypeScript files
 - deno_test: Run the test suite
 - deno_lint: Check for code quality issues
@@ -85,6 +87,7 @@ AI Assistant will use:
 User: "Benchmark my HTTP handler function"
 
 AI Assistant will use:
+
 - deno_bench: Run performance benchmarks
 - deno_coverage: Generate test coverage reports
 - deno_info: Analyze module dependencies
@@ -96,6 +99,7 @@ AI Assistant will use:
 User: "Compile my application for production deployment"
 
 AI Assistant will use:
+
 - deno_compile: Create standalone executable
 - deno_doc: Generate API documentation
 - deno_test: Run final test suite
@@ -123,7 +127,7 @@ deno_add @std/http @std/crypto @std/encoding
 ```
 
 3. **Create Main Server File:**
-The AI would create a server.ts file with proper imports and structure.
+   The AI would create a server.ts file with proper imports and structure.
 
 4. **Format and Check:**
 
@@ -198,6 +202,62 @@ deno_outdated
 ```bash
 deno_compile --output dist/app main.ts
 ```
+
+## Docker Deployment Examples
+
+### Using Pre-built Docker Images
+
+The Deno MCP Server is available as Docker images from multiple registries with ARM64 support:
+
+#### Docker Hub
+
+```bash
+# Pull and run latest version
+docker pull sudsarkar13/deno-mcp:1.0.6
+docker run -d --name deno-mcp-server sudsarkar13/deno-mcp:1.0.6
+
+# Platform-specific deployment (Apple Silicon)
+docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
+docker run -d --name deno-mcp-server --platform linux/arm64 sudsarkar13/deno-mcp:1.0.6
+```
+
+#### GitHub Container Registry (GHCR)
+
+```bash
+# Pull and run from GHCR
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+docker run -d --name deno-mcp-server ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+```
+
+#### Docker Compose Deployment
+
+```yaml
+# docker-compose.yml
+version: "3.8"
+services:
+  deno-mcp:
+    image: sudsarkar13/deno-mcp:1.0.6
+    container_name: deno-mcp-server
+    restart: unless-stopped
+    ports:
+      - "3000:3000"
+    volumes:
+      - deno-cache:/home/denouser/.deno
+      - ./workspace:/workspace:ro
+    environment:
+      - NODE_ENV=production
+
+volumes:
+  deno-cache:
+```
+
+### Platform Compatibility
+
+The Docker images support multiple architectures:
+
+- **AMD64**: Intel/AMD 64-bit processors
+- **ARM64**: Apple Silicon Macs (M1/M2/M3), ARM-based cloud instances
+- **Automatic Detection**: Docker automatically selects the correct architecture
 
 ## Advanced Workflows
 

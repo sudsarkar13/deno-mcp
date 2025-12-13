@@ -50,12 +50,12 @@ deno-mcp
 
 ```json
 {
-  "mcpServers": {
-    "deno-mcp": {
-      "command": "deno-mcp",
-      "args": []
-    }
+ "mcpServers": {
+  "deno-mcp": {
+   "command": "deno-mcp",
+   "args": []
   }
+ }
 }
 ```
 
@@ -115,16 +115,16 @@ deno-mcp --help
 
 ```json
 {
-  "mcpServers": {
-    "deno-mcp": {
-      "command": "deno-mcp",
-      "args": [],
-      "env": {
-        "DENO_DIR": "/path/to/.deno",
-        "PATH": "/usr/local/bin:/usr/bin:/bin"
-      }
-    }
+ "mcpServers": {
+  "deno-mcp": {
+   "command": "deno-mcp",
+   "args": [],
+   "env": {
+    "DENO_DIR": "/path/to/.deno",
+    "PATH": "/usr/local/bin:/usr/bin:/bin"
+   }
   }
+ }
 }
 ```
 
@@ -163,20 +163,55 @@ echo "Run 'deno-mcp' to start the server"
 
 ### Using Pre-built Images
 
-1. **Pull the image** (when available):
+The Deno MCP Server is available from multiple container registries with full multi-platform support.
+
+#### Docker Hub Registry
 
 ```bash
+# Pull latest version
 docker pull sudsarkar13/deno-mcp:latest
+docker pull sudsarkar13/deno-mcp:1.0.6
+
+# Platform-specific pulls (optional - Docker auto-detects)
+docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/amd64
+docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
 ```
 
-2. **Run the container**:
+#### GitHub Container Registry (GHCR)
 
 ```bash
+# Pull latest version
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:latest
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+
+# Platform-specific pulls
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/amd64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
+```
+
+#### Multi-Platform Support
+
+- **AMD64 (x86_64)**: Intel and AMD 64-bit processors
+- **ARM64 (aarch64)**: Apple Silicon Macs (M1/M2/M3), ARM-based cloud instances
+- **Automatic Detection**: Docker automatically selects the correct architecture
+- **Cross-Platform Testing**: All images are built and tested on both architectures
+
+#### Run the Container
+
+```bash
+# Using Docker Hub
 docker run -d \
   --name deno-mcp-server \
   -p 3000:3000 \
   -v $(pwd)/workspace:/workspace \
-  sudsarkar13/deno-mcp:latest
+  sudsarkar13/deno-mcp:1.0.6
+
+# Using GitHub Container Registry
+docker run -d \
+  --name deno-mcp-server \
+  -p 3000:3000 \
+  -v $(pwd)/workspace:/workspace \
+  ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
 ```
 
 ### Building Your Own Image
@@ -210,7 +245,7 @@ docker-compose up -d deno-mcp
 2. **Custom docker-compose for production**:
 
 ```yaml
-version: '3.8'
+version: "3.8"
 services:
   deno-mcp:
     image: sudsarkar13/deno-mcp:latest
@@ -228,7 +263,7 @@ services:
       resources:
         limits:
           memory: 512M
-          cpus: '0.5'
+          cpus: "0.5"
     healthcheck:
       test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
       interval: 30s
@@ -343,11 +378,11 @@ EOF
 
 ```javascript
 // lambda.js
-const { Server } = require('@modelcontextprotocol/sdk/server/index.js');
+const { Server } = require("@modelcontextprotocol/sdk/server/index.js");
 // Import your MCP server setup
 
 exports.handler = async (event, context) => {
-  // Lambda handler implementation
+ // Lambda handler implementation
 };
 ```
 
@@ -502,28 +537,28 @@ name: Deploy to Production
 on:
   push:
     branches: [main]
-    tags: ['v*']
+    tags: ["v*"]
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '18'
-          
+          node-version: "18"
+
       - name: Install dependencies
         run: npm install
-        
+
       - name: Build project
         run: npm run build
-        
+
       - name: Run tests
         run: npm test
-        
+
       - name: Deploy to production
         run: |
           # Your deployment script here
@@ -533,12 +568,12 @@ jobs:
 2. **Docker build and push**:
 
 ```yaml
-      - name: Build and push Docker image
-        uses: docker/build-push-action@v5
-        with:
-          context: .
-          push: true
-          tags: sudsarkar13/deno-mcp:latest
+- name: Build and push Docker image
+  uses: docker/build-push-action@v5
+  with:
+    context: .
+    push: true
+    tags: sudsarkar13/deno-mcp:latest
 ```
 
 ### GitLab CI
@@ -583,12 +618,12 @@ deploy:
 
 ```javascript
 // Add to your server
-app.get('/health', (req, res) => {
-  res.json({
-    status: 'healthy',
-    timestamp: new Date().toISOString(),
-    version: process.env.npm_package_version
-  });
+app.get("/health", (req, res) => {
+ res.json({
+  status: "healthy",
+  timestamp: new Date().toISOString(),
+  version: process.env.npm_package_version,
+ });
 });
 ```
 
@@ -622,15 +657,15 @@ done
 
 ```javascript
 // Add structured logging
-const winston = require('winston');
+const winston = require("winston");
 
 const logger = winston.createLogger({
-  level: 'info',
-  format: winston.format.json(),
-  transports: [
-    new winston.transports.File({ filename: 'error.log', level: 'error' }),
-    new winston.transports.File({ filename: 'combined.log' })
-  ]
+ level: "info",
+ format: winston.format.json(),
+ transports: [
+  new winston.transports.File({ filename: "error.log", level: "error" }),
+  new winston.transports.File({ filename: "combined.log" }),
+ ],
 });
 ```
 
@@ -656,19 +691,19 @@ const logger = winston.createLogger({
 1. **Prometheus metrics**:
 
 ```javascript
-const prometheus = require('prom-client');
+const prometheus = require("prom-client");
 
 // Create metrics
 const httpDuration = new prometheus.Histogram({
-  name: 'http_request_duration_seconds',
-  help: 'Duration of HTTP requests in seconds',
-  labelNames: ['method', 'status_code']
+ name: "http_request_duration_seconds",
+ help: "Duration of HTTP requests in seconds",
+ labelNames: ["method", "status_code"],
 });
 
 // Expose metrics endpoint
-app.get('/metrics', (req, res) => {
-  res.set('Content-Type', prometheus.register.contentType);
-  res.end(prometheus.register.metrics());
+app.get("/metrics", (req, res) => {
+ res.set("Content-Type", prometheus.register.contentType);
+ res.end(prometheus.register.metrics());
 });
 ```
 
@@ -676,20 +711,20 @@ app.get('/metrics', (req, res) => {
 
 ```json
 {
-  "dashboard": {
-    "title": "Deno MCP Server",
-    "panels": [
-      {
-        "title": "Request Rate",
-        "type": "graph",
-        "targets": [
-          {
-            "expr": "rate(http_requests_total[5m])"
-          }
-        ]
-      }
+ "dashboard": {
+  "title": "Deno MCP Server",
+  "panels": [
+   {
+    "title": "Request Rate",
+    "type": "graph",
+    "targets": [
+     {
+      "expr": "rate(http_requests_total[5m])"
+     }
     ]
-  }
+   }
+  ]
+ }
 }
 ```
 
@@ -711,14 +746,14 @@ sudo ufw enable
 2. **Rate limiting**:
 
 ```javascript
-const rateLimit = require('express-rate-limit');
+const rateLimit = require("express-rate-limit");
 
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100 // limit each IP to 100 requests per windowMs
+ windowMs: 15 * 60 * 1000, // 15 minutes
+ max: 100, // limit each IP to 100 requests per windowMs
 });
 
-app.use('/api/', limiter);
+app.use("/api/", limiter);
 ```
 
 ### Authentication
@@ -727,34 +762,34 @@ app.use('/api/', limiter);
 
 ```javascript
 const authenticateApiKey = (req, res, next) => {
-  const apiKey = req.headers['x-api-key'];
-  if (!apiKey || !isValidApiKey(apiKey)) {
-    return res.status(401).json({ error: 'Invalid API key' });
-  }
-  next();
+ const apiKey = req.headers["x-api-key"];
+ if (!apiKey || !isValidApiKey(apiKey)) {
+  return res.status(401).json({ error: "Invalid API key" });
+ }
+ next();
 };
 
-app.use('/api/', authenticateApiKey);
+app.use("/api/", authenticateApiKey);
 ```
 
 2. **JWT authentication**:
 
 ```javascript
-const jwt = require('jsonwebtoken');
+const jwt = require("jsonwebtoken");
 
 const authenticateJWT = (req, res, next) => {
-  const token = req.headers.authorization?.split(' ')[1];
-  if (!token) {
-    return res.status(401).json({ error: 'Access token required' });
+ const token = req.headers.authorization?.split(" ")[1];
+ if (!token) {
+  return res.status(401).json({ error: "Access token required" });
+ }
+
+ jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+  if (err) {
+   return res.status(403).json({ error: "Invalid token" });
   }
-  
-  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-    if (err) {
-      return res.status(403).json({ error: 'Invalid token' });
-    }
-    req.user = user;
-    next();
-  });
+  req.user = user;
+  next();
+ });
 };
 ```
 
@@ -772,12 +807,12 @@ sudo certbot --nginx -d your-domain.com
 server {
     listen 443 ssl http2;
     server_name your-domain.com;
-    
+
     ssl_certificate /path/to/certificate.crt;
     ssl_certificate_key /path/to/private.key;
     ssl_protocols TLSv1.2 TLSv1.3;
     ssl_ciphers HIGH:!aNULL:!MD5;
-    
+
     location / {
         proxy_pass http://localhost:3000;
         # ... other proxy settings
@@ -886,24 +921,24 @@ dig your-domain.com
 1. **Caching strategies**:
 
 ```javascript
-const NodeCache = require('node-cache');
+const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 600 }); // 10 minutes
 
-app.use('/api/cache', (req, res, next) => {
-  const key = req.originalUrl;
-  const cachedResponse = cache.get(key);
-  
-  if (cachedResponse) {
-    return res.json(cachedResponse);
-  }
-  
-  res.sendResponse = res.json;
-  res.json = (body) => {
-    cache.set(key, body);
-    res.sendResponse(body);
-  };
-  
-  next();
+app.use("/api/cache", (req, res, next) => {
+ const key = req.originalUrl;
+ const cachedResponse = cache.get(key);
+
+ if (cachedResponse) {
+  return res.json(cachedResponse);
+ }
+
+ res.sendResponse = res.json;
+ res.json = (body) => {
+  cache.set(key, body);
+  res.sendResponse(body);
+ };
+
+ next();
 });
 ```
 
@@ -912,8 +947,8 @@ app.use('/api/cache', (req, res, next) => {
 ```javascript
 // Configure connection limits
 const server = app.listen(3000, () => {
-  server.maxConnections = 1000;
-  server.timeout = 30000; // 30 seconds
+ server.maxConnections = 1000;
+ server.timeout = 30000; // 30 seconds
 });
 ```
 

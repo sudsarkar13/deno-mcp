@@ -39,6 +39,7 @@ The Deno MCP Tools project uses an automated CI/CD pipeline for releases, trigge
 As of December 9, 2025, npm has permanently revoked all classic tokens. You **must** use granular access tokens for CI/CD automation.
 
 **Required GitHub Secret Configuration:**
+
 - Secret Name: `NPM_TOKEN`
 - Secret Value: Granular access token (not classic token)
 - Token Requirements:
@@ -105,7 +106,7 @@ npm run build
 
 ```json
 {
-  "version": "X.Y.Z"
+	"version": "X.Y.Z"
 }
 ```
 
@@ -123,15 +124,19 @@ npm run build
 ## [X.Y.Z] - YYYY-MM-DD
 
 ### Added
+
 - New features
 
 ### Changed
+
 - Modified features
 
 ### Fixed
+
 - Bug fixes
 
 ### Removed
+
 - Deprecated features
 ```
 
@@ -414,7 +419,7 @@ npm token create --read-write --cidr=0.0.0.0/0 --description="GitHub Actions CI/
 
 # 3. Ensure token has correct permissions:
 # - Type: Granular Access Token
-# - Permissions: Read and Write  
+# - Permissions: Read and Write
 # - 2FA Bypass: Enabled
 # - Packages: @sudsarkar13/deno-mcp
 # - Expiration: Set to 90 days maximum
@@ -607,21 +612,26 @@ Keep `CHANGELOG.md` updated with every release:
 ## [Unreleased]
 
 ### Added
+
 - New features in development
 
 ### Changed
+
 - Modified features in development
 
 ### Fixed
+
 - Bug fixes in development
 
-## [1.2.3] - 2024-12-11
+## [1.2.3] - 2025-12-11
 
 ### Added
+
 - Feature A
 - Feature B
 
 ### Fixed
+
 - Bug fix A
 - Bug fix B
 ```
@@ -633,6 +643,7 @@ Keep `CHANGELOG.md` updated with every release:
 **⚠️ CRITICAL: Granular tokens expire every 90 days maximum**
 
 **Recommended Rotation Schedule:**
+
 - **Production tokens**: Every 60 days
 - **Development tokens**: Every 30 days
 - **Emergency tokens**: Immediately after use
@@ -679,6 +690,7 @@ git push origin --delete test-token-v$(date +%s)
 OIDC (OpenID Connect) trusted publishing eliminates the need for long-lived tokens by using GitHub's identity to authenticate with npm.
 
 **Benefits:**
+
 - No token rotation required
 - Enhanced security through short-lived tokens
 - Automatic authentication via GitHub Actions
@@ -687,6 +699,7 @@ OIDC (OpenID Connect) trusted publishing eliminates the need for long-lived toke
 **Setup OIDC Trusted Publishing:**
 
 1. **Configure npm Package for OIDC:**
+
    ```bash
    # Visit: https://www.npmjs.com/package/@sudsarkar13/deno-mcp/access
    # Add trusted publisher:
@@ -697,6 +710,7 @@ OIDC (OpenID Connect) trusted publishing eliminates the need for long-lived toke
    ```
 
 2. **Update CI/CD Workflow:**
+
    ```yaml
    # Add to .github/workflows/ci.yml in publish-npm job
    permissions:
@@ -721,18 +735,21 @@ OIDC (OpenID Connect) trusted publishing eliminates the need for long-lived toke
 ### Security Best Practices
 
 **Token Security:**
+
 - Never commit tokens to version control
 - Use environment-specific tokens when possible
 - Enable audit logging for token usage
 - Regular security reviews of token permissions
 
 **Access Control:**
+
 - Limit token scope to specific packages
 - Use IP restrictions when feasible
 - Enable 2FA bypass only for automation
 - Regular access reviews
 
 **Monitoring:**
+
 - Set up alerts for token usage
 - Monitor for unusual publishing activity
 - Regular security audits
@@ -780,4 +797,4 @@ gh release view v1.2.3
 
 ---
 
-*This guide is maintained alongside the project. Please keep it updated with any changes to the release process.*
+_This guide is maintained alongside the project. Please keep it updated with any changes to the release process._

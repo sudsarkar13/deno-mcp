@@ -159,10 +159,10 @@ We would like to thank the following individuals for responsibly disclosing secu
 <!-- List of security researchers who have reported vulnerabilities -->
 <!-- This section will be updated as vulnerabilities are reported and resolved -->
 
-*No security vulnerabilities have been reported yet.*
+_No security vulnerabilities have been reported yet._
 
 ---
 
 **Note**: This security policy is subject to change. Please check back regularly for updates.
 
-Last updated: December 10, 2024
+Last updated: December 10, 2025

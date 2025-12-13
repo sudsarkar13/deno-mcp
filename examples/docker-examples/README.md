@@ -20,8 +20,44 @@ docker-examples/
 ### 1. Production Image (`Dockerfile`)
 
 - **Purpose**: Optimized for production deployment
-- **Features**: Minimal size, security-hardened, non-root user
+- **Features**: Minimal size, security-hardened, non-root user, multi-platform support
+- **Platforms**: AMD64 and ARM64 (Apple Silicon compatible)
 - **Usage**: `docker build -f Dockerfile -t deno-mcp:prod .`
+
+### Pre-built Images
+
+The production image is available from multiple registries with multi-platform support:
+
+#### Docker Hub
+
+```bash
+# Latest version
+docker pull sudsarkar13/deno-mcp:latest
+docker pull sudsarkar13/deno-mcp:1.0.6
+
+# Platform-specific pulls
+docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/amd64
+docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
+```
+
+#### GitHub Container Registry (GHCR)
+
+```bash
+# Latest version
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:latest
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+
+# Platform-specific pulls
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/amd64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
+```
+
+#### Platform Support Details
+
+- **AMD64 (x86_64)**: Intel and AMD 64-bit processors
+- **ARM64 (aarch64)**: Apple Silicon Macs (M1/M2/M3), ARM-based cloud instances, Raspberry Pi 4+
+- **Automatic Detection**: Docker automatically selects the appropriate architecture
+- **Cross-platform Builds**: Images built and tested on both architectures
 
 ### 2. Development Image (`Dockerfile.dev`)
 
@@ -113,22 +149,22 @@ Example test results structure:
 
 ```json
 {
-  "tests": [
-    {
-      "name": "Node.js Installation",
-      "status": "PASS",
-      "message": "Node.js version: v20.x.x",
-      "timestamp": "2024-12-11T01:30:00Z"
-    }
-  ],
-  "summary": {
-    "tests_passed": 12,
-    "tests_failed": 0,
-    "total_tests": 12,
-    "success_rate": 100,
-    "timestamp": "2024-12-11T01:35:00Z",
-    "environment": "docker-container"
+ "tests": [
+  {
+   "name": "Node.js Installation",
+   "status": "PASS",
+   "message": "Node.js version: v20.x.x",
+   "timestamp": "2025-12-11T01:30:00Z"
   }
+ ],
+ "summary": {
+  "tests_passed": 12,
+  "tests_failed": 0,
+  "total_tests": 12,
+  "success_rate": 100,
+  "timestamp": "2025-12-11T01:35:00Z",
+  "environment": "docker-container"
+ }
 }
 ```
 

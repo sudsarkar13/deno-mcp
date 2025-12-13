@@ -84,12 +84,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "mcpServers": {
-    "deno-tools": {
-      "command": "node",
-      "args": ["/path/to/deno-mcp-tools/build/index.js"]
-    }
+ "mcpServers": {
+  "deno-tools": {
+   "command": "node",
+   "args": ["/path/to/deno-mcp-tools/build/index.js"]
   }
+ }
 }
 ```
 
@@ -97,12 +97,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "mcpServers": {
-    "deno-tools": {
-      "command": "node",
-      "args": ["/path/to/deno-mcp-tools/build/index.js"]
-    }
+ "mcpServers": {
+  "deno-tools": {
+   "command": "node",
+   "args": ["/path/to/deno-mcp-tools/build/index.js"]
   }
+ }
 }
 ```
 
@@ -110,11 +110,11 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "mcpServers": {
-    "deno-tools": {
-      "command": "deno-mcp-tools"
-    }
+ "mcpServers": {
+  "deno-tools": {
+   "command": "deno-mcp-tools"
   }
+ }
 }
 ```
 
@@ -124,12 +124,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_run",
-  "arguments": {
-    "script": "main.ts",
-    "permissions": ["--allow-net", "--allow-read"],
-    "args": ["--port", "8000"]
-  }
+ "tool": "deno_run",
+ "arguments": {
+  "script": "main.ts",
+  "permissions": ["--allow-net", "--allow-read"],
+  "args": ["--port", "8000"]
+ }
 }
 ```
 
@@ -137,11 +137,11 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_fmt",
-  "arguments": {
-    "files": ["src/"],
-    "check": false
-  }
+ "tool": "deno_fmt",
+ "arguments": {
+  "files": ["src/"],
+  "check": false
+ }
 }
 ```
 
@@ -149,12 +149,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_test",
-  "arguments": {
-    "coverage": true,
-    "parallel": true,
-    "permissions": ["--allow-read", "--allow-write"]
-  }
+ "tool": "deno_test",
+ "arguments": {
+  "coverage": true,
+  "parallel": true,
+  "permissions": ["--allow-read", "--allow-write"]
+ }
 }
 ```
 
@@ -162,10 +162,10 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_add",
-  "arguments": {
-    "packages": ["@std/http", "@std/path"]
-  }
+ "tool": "deno_add",
+ "arguments": {
+  "packages": ["@std/http", "@std/path"]
+ }
 }
 ```
 
@@ -173,12 +173,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_compile",
-  "arguments": {
-    "script": "cli.ts",
-    "output": "my-tool",
-    "permissions": ["--allow-read", "--allow-write"]
-  }
+ "tool": "deno_compile",
+ "arguments": {
+  "script": "cli.ts",
+  "output": "my-tool",
+  "permissions": ["--allow-read", "--allow-write"]
+ }
 }
 ```
 
@@ -198,7 +198,7 @@ Most tools accept a `workingDirectory` parameter to specify where the command sh
 
 ```json
 {
-  "workingDirectory": "/path/to/project"
+ "workingDirectory": "/path/to/project"
 }
 ```
 
@@ -208,10 +208,10 @@ Set environment variables for command execution:
 
 ```json
 {
-  "envVars": {
-    "DENO_ENV": "development",
-    "API_KEY": "your-api-key"
-  }
+ "envVars": {
+  "DENO_ENV": "development",
+  "API_KEY": "your-api-key"
+ }
 }
 ```
 
@@ -302,9 +302,93 @@ MIT License - see LICENSE file for details.
 - **Documentation**: Check the docs/ directory for detailed guides
 - **Community**: Join discussions in GitHub Discussions
 
+## Docker Images
+
+The Deno MCP Server is available as Docker images from multiple registries:
+
+### Docker Hub
+
+```bash
+# Latest version
+docker pull sudsarkar13/deno-mcp:latest
+docker pull sudsarkar13/deno-mcp:1.0.6
+
+# Multi-platform support (AMD64 + ARM64)
+docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/amd64
+docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
+```
+
+### GitHub Container Registry (GHCR)
+
+```bash
+# Latest version
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:latest
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+
+# Multi-platform support
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/amd64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
+```
+
+### Platform Support
+
+- **AMD64**: Intel/AMD 64-bit processors
+- **ARM64**: Apple Silicon (M1/M2/M3), ARM-based cloud instances
+- **Cross-platform**: Automatic platform detection and optimization
+
 ## Changelog
 
-### v1.0.0
+### v1.0.6 - 2025-12-13
+
+#### Changed
+
+- **Comprehensive Documentation Update**: Updated all project documentation to reflect current state and recent improvements
+- **Docker Registry Support**: Enhanced documentation with dual registry support (Docker Hub + GitHub Container Registry)
+- **Multi-platform Documentation**: Added comprehensive ARM64 and Apple Silicon compatibility information across all docs
+- **Enhanced Examples**: Improved Docker deployment examples and usage patterns throughout documentation
+- **Cross-platform Guidance**: Enhanced documentation for ARM64, Apple Silicon, and multi-platform deployment scenarios
+
+### v1.0.5 - 2025-12-13
+
+#### Fixed
+
+- **GitHub Container Registry Publishing**: Fixed GHCR publishing permissions and image path configuration
+- **Dual Registry Publishing**: Ensured both Docker Hub and GHCR publishing work correctly
+- **Multi-platform Support**: Validated ARM64 and AMD64 images publish to both registries
+
+### v1.0.4 - 2025-12-13
+
+#### Fixed
+
+- **ARM64 Compatibility**: Switched Docker base image from Alpine to Ubuntu for better ARM64 support
+- **Apple Silicon Support**: Full compatibility with Apple Silicon Macs (M1/M2/M3 chips)
+- **Cross-platform Docker**: Enhanced multi-platform Docker builds and deployment
+
+### v1.0.3 - 2025-12-13
+
+#### Fixed
+
+- **Docker Enhanced Tests**: Added TypeScript build integration to Docker test suite
+- **Deno Runtime**: Updated from v1.47.2 to v2.6.0 for better compatibility
+- **CI/CD Pipeline**: Improved workflow dependencies and release automation
+
+### v1.0.2 - 2025-12-13
+
+#### Fixed
+
+- **Cross-platform Support**: Initial ARM64 Docker build improvements
+- **CI/CD Reliability**: Enhanced pipeline job dependencies and execution order
+
+### v1.0.1 - 2025-12-12
+
+#### Changed
+
+- **CI/CD Pipeline**: Restructured release workflow for better reliability
+- **GitHub Releases**: Improved release creation and dependency management
+
+### v1.0.0 - 2025-12-09
+
+#### Added
 
 - Initial release
 - Complete Deno CLI toolchain coverage

@@ -5,7 +5,151 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.1] - 2024-12-12
+## [1.0.6] - 2025-12-13
+
+### Changed
+
+#### Documentation Enhancements
+
+- **Comprehensive Documentation Update**: Updated all project documentation to reflect current state and recent improvements
+- **Docker Registry Support**: Enhanced documentation with dual registry support (Docker Hub + GitHub Container Registry)
+- **Multi-platform Documentation**: Added comprehensive ARM64 and Apple Silicon compatibility information across all docs
+- **Enhanced Examples**: Improved Docker deployment examples and usage patterns throughout documentation
+
+#### Updated Documentation Files
+
+- **README.md**: Added Docker Images section with both registries, updated changelog, enhanced multi-platform support details
+- **docs/HOSTING.md**: Updated with GHCR registry support, ARM64 deployment instructions, enhanced container deployment examples
+- **examples/docker-examples/README.md**: Enhanced with dual registry support, comprehensive platform compatibility details
+- **examples/basic-usage.md**: Added Docker deployment examples section with multi-registry usage and cross-platform guidance
+- **PROJECT_GUIDELINES.md**: Updated release checklist, added Enhanced CI/CD Pipeline section, improved development workflow documentation
+
+#### Improved User Experience
+
+- **Cross-platform Guidance**: Enhanced documentation for ARM64, Apple Silicon, and multi-platform deployment scenarios
+- **Registry Flexibility**: Provided users with choice between Docker Hub and GitHub Container Registry
+- **Deployment Examples**: Added comprehensive Docker Compose and container deployment examples
+- **Development Workflow**: Updated development guidelines to reflect current CI/CD capabilities and best practices
+
+### Technical Details
+
+- **Documentation Synchronization**: All documentation now reflects version 1.0.5+ capabilities
+- **Registry Integration**: Complete documentation coverage for both Docker Hub and GHCR publishing
+- **Platform Support**: Comprehensive ARM64 and Apple Silicon documentation across all relevant files
+- **CI/CD Documentation**: Enhanced documentation of current pipeline capabilities and multi-platform support
+
+## [1.0.5] - 2025-12-13
+
+### Fixed
+
+#### GitHub Container Registry Publishing
+
+- **GHCR Permissions**: Fixed GitHub Container Registry (GHCR) publishing permissions by adding proper job permissions (`contents: read`, `packages: write`, `id-token: write`) to the Docker publishing workflow
+- **Image Path Configuration**: Corrected GHCR image path from `${{ github.repository_owner }}` to `${{ github.repository }}` for proper repository-based naming
+- **Dual Registry Publishing**: Ensured both Docker Hub and GitHub Container Registry publishing work correctly in parallel
+- **Multi-platform Support**: Validated that both AMD64 and ARM64 images are published to both registries successfully
+
+#### CI/CD Pipeline Improvements
+
+- **Registry Authentication**: Improved authentication handling for GitHub Container Registry publishing
+- **Error Handling**: Enhanced error reporting for Docker registry publishing failures
+- **Workflow Reliability**: Strengthened Docker publishing workflow to handle multiple registry targets
+
+### Technical Details
+
+- **Job Permissions**: Added explicit permissions for package publishing and token access
+- **Registry Configuration**: Updated metadata extraction to support dual registry publishing
+- **Platform Support**: Confirmed multi-platform builds work across both Docker Hub and GHCR
+
+## [1.0.4] - 2025-12-13
+
+### Fixed
+
+#### ARM64 Architecture Compatibility
+
+- **Docker Base Image**: Switched from `node:20-alpine` to `node:20-slim` (Ubuntu-based) to resolve ARM64 compatibility issues
+- **Package Management**: Updated from Alpine's `apk` to Debian's `apt-get` for better ARM64 package availability
+- **User Management**: Changed user creation from Alpine syntax (`adduser`) to Debian syntax (`groupadd` + `useradd`) for cross-platform compatibility
+- **QEMU Emulation**: Resolved ARM64 emulation issues that were causing build failures with Alpine/busybox triggers
+
+#### Multi-platform Docker Support
+
+- **Architecture Detection**: Improved cross-platform architecture detection for Deno binary downloads
+- **Build Process**: Enhanced Docker build process to handle both AMD64 and ARM64 architectures reliably
+- **Container Optimization**: Added proper cleanup commands for Debian-based images (`apt-get clean`, `rm -rf /var/lib/apt/lists/*`)
+
+#### Platform-specific Improvements
+
+- **Apple Silicon Support**: Full compatibility with Apple Silicon Macs (M1/M2/M3 chips)
+- **ARM Cloud Instances**: Support for ARM-based cloud computing instances
+- **Cross-compilation**: Improved cross-platform binary handling and installation
+
+### Technical Details
+
+- **Base Image Change**: Migration from Alpine Linux to Ubuntu/Debian for better ARM64 ecosystem support
+- **Package Dependencies**: Updated package installation commands for Debian package manager
+- **Security**: Maintained non-root user execution with proper permission handling
+- **Performance**: Optimized layer caching and build performance across architectures
+
+## [1.0.3] - 2025-12-13
+
+### Fixed
+
+#### Docker Enhanced Test Suite
+
+- **Build Integration**: Added TypeScript compilation step to Docker enhanced test configuration
+- **Test Reliability**: Improved Docker test runner with proper build artifact handling
+- **External Connectivity**: Enhanced handling of external network connectivity tests in containerized environments
+- **Permission Management**: Fixed executable permissions for built TypeScript output in Docker containers
+
+#### Deno Runtime Compatibility
+
+- **Version Update**: Updated Deno runtime from v1.47.2 to v2.6.0 to resolve download URL and compatibility issues
+- **Cross-platform Installation**: Improved Deno binary installation process for multi-architecture support
+- **Runtime Detection**: Enhanced Deno version detection and validation in CI/CD environments
+
+#### CI/CD Pipeline Stability
+
+- **Workflow Dependencies**: Fixed job dependencies in GitHub Actions workflow to ensure proper execution order
+- **Release Pipeline**: Resolved issues with skipped release and publishing steps
+- **Artifact Management**: Improved build artifact lifecycle management across workflow jobs
+- **Error Handling**: Enhanced error reporting and recovery in automated testing and deployment
+
+### Changed
+
+#### Development Workflow
+
+- **Test Suite**: Improved Docker-based testing with source code compilation
+- **Build Process**: Streamlined TypeScript build integration in containerized environments
+- **Quality Gates**: Enhanced CI/CD quality checks and validation steps
+
+### Technical Details
+
+- **Dockerfile Updates**: Modified enhanced test Dockerfile to include proper build steps
+- **Version Management**: Synchronized Deno version across all Docker configurations
+- **Pipeline Optimization**: Improved workflow execution reliability and error handling
+
+## [1.0.2] - 2025-12-13
+
+### Fixed
+
+#### Cross-platform Docker Support
+
+- **ARM64 Compatibility**: Initial attempt to resolve ARM64 Docker build issues with cross-platform Deno installation
+- **Architecture Detection**: Improved platform detection for Deno binary downloads
+- **Build Process**: Enhanced Docker build process for multi-architecture support
+
+#### CI/CD Improvements
+
+- **Docker Job Dependencies**: Added proper job dependencies for Docker publishing in release workflow
+- **Pipeline Reliability**: Improved overall CI/CD pipeline stability and execution order
+
+### Technical Details
+
+- **Platform Support**: Early work on cross-platform compatibility improvements
+- **Workflow Configuration**: Enhanced GitHub Actions workflow job orchestration
+
+## [1.0.1] - 2025-12-12
 
 ### Changed
 
@@ -30,7 +174,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - **Release Validation**: Added validation to ensure GitHub releases are created successfully
 - **Pipeline Optimization**: Streamlined release process for better maintainability
 
-## [1.0.0] - 2024-12-09
+## [1.0.0] - 2025-12-09
 
 ### Added
 
@@ -123,12 +267,12 @@ npx @modelcontextprotocol/inspector deno-mcp
 
 ```json
 {
-  "mcpServers": {
-    "deno-mcp": {
-      "command": "deno-mcp",
-      "args": []
-    }
+ "mcpServers": {
+  "deno-mcp": {
+   "command": "deno-mcp",
+   "args": []
   }
+ }
 }
 ```
 
@@ -136,13 +280,13 @@ npx @modelcontextprotocol/inspector deno-mcp
 
 ```json
 {
-  "mcpServers": [
-    {
-      "name": "deno-mcp",
-      "command": "deno-mcp",
-      "args": []
-    }
-  ]
+ "mcpServers": [
+  {
+   "name": "deno-mcp",
+   "command": "deno-mcp",
+   "args": []
+  }
+ ]
 }
 ```
 
