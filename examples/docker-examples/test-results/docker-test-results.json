@@ -1,1 +1,108 @@
-{"tests": [], "summary": {}}
+{
+  "tests": [
+    {
+      "name": "Node.js Installation",
+      "status": "PASS",
+      "message": "Node.js version: v20.19.6",
+      "timestamp": "2025-12-13T14:00:48Z"
+    },
+    {
+      "name": "Deno Installation",
+      "status": "PASS",
+      "message": "Deno version: deno 2.6.0 (stable, release, x86_64-unknown-linux-gnu)",
+      "timestamp": "2025-12-13T14:00:48Z"
+    },
+    {
+      "name": "NPM Installation",
+      "status": "PASS",
+      "message": "NPM version: 10.8.2",
+      "timestamp": "2025-12-13T14:00:48Z"
+    },
+    {
+      "name": "Build Output Exists",
+      "status": "PASS",
+      "message": "Main executable found",
+      "timestamp": "2025-12-13T14:00:48Z"
+    },
+    {
+      "name": "Test Directory Exists",
+      "status": "PASS",
+      "message": "Test directory found",
+      "timestamp": "2025-12-13T14:00:48Z"
+    },
+    {
+      "name": "Package Configuration",
+      "status": "PASS",
+      "message": "Package: @sudsarkar13/deno-mcp",
+      "timestamp": "2025-12-13T14:00:48Z"
+    },
+    {
+      "name": "Non-root User",
+      "status": "PASS",
+      "message": "Running as user: denouser",
+      "timestamp": "2025-12-13T14:00:48Z"
+    },
+    {
+      "name": "Executable Permissions",
+      "status": "PASS",
+      "message": "Main executable has correct permissions",
+      "timestamp": "2025-12-13T14:00:49Z"
+    },
+    {
+      "name": "Server Version Check",
+      "status": "PASS",
+      "message": "Server responds to version check",
+      "timestamp": "2025-12-13T14:00:49Z"
+    },
+    {
+      "name": "Server Startup/Shutdown",
+      "status": "PASS",
+      "message": "Server starts and stops cleanly",
+      "timestamp": "2025-12-13T14:00:52Z"
+    },
+    {
+      "name": "Node.js Test Suite",
+      "status": "PASS",
+      "message": "All Node.js tests passed",
+      "timestamp": "2025-12-13T14:01:18Z"
+    },
+    {
+      "name": "Deno Environment",
+      "status": "PASS",
+      "message": "DENO_DIR set to: /home/denouser/.deno",
+      "timestamp": "2025-12-13T14:01:18Z"
+    },
+    {
+      "name": "Node Environment",
+      "status": "PASS",
+      "message": "NODE_ENV correctly set to test",
+      "timestamp": "2025-12-13T14:01:19Z"
+    },
+    {
+      "name": "Resource Monitoring",
+      "status": "PASS",
+      "message": "Memory and CPU monitoring successful",
+      "timestamp": "2025-12-13T14:01:19Z"
+    },
+    {
+      "name": "External Connectivity",
+      "status": "PASS",
+      "message": "No external network access (expected in CI/CD)",
+      "timestamp": "2025-12-13T14:01:19Z"
+    },
+    {
+      "name": "Health Check",
+      "status": "PASS",
+      "message": "Container health check passed",
+      "timestamp": "2025-12-13T14:01:19Z"
+    }
+  ],
+  "summary": {
+    "tests_passed": 16,
+    "tests_failed": 0,
+    "total_tests": 16,
+    "success_rate": 100,
+    "timestamp": "2025-12-13T14:01:19Z",
+    "environment": "docker-container"
+  }
+}

@@ -30,6 +30,9 @@ COPY src/ ./src/
 # Install dependencies
 RUN npm ci --ignore-scripts
 
+# Build the TypeScript project
+RUN npm run build
+
 # Copy test files
 COPY test/ ./test/
 COPY README.md LICENSE ./
