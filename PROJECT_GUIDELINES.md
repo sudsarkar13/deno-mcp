@@ -64,20 +64,22 @@ Each tool category follows a consistent pattern:
 
 ```typescript
 // Tool implementation
-export async function denoRun(options: DenoRunOptions): Promise<DenoCommandResult> {
+export async function denoRun(
+  options: DenoRunOptions,
+): Promise<DenoCommandResult> {
   // Implementation
 }
 
 // MCP tool handler
 export const executionTools = {
   deno_run: {
-    name: 'deno_run',
-    description: 'Execute a Deno script',
+    name: "deno_run",
+    description: "Execute a Deno script",
     inputSchema: TOOL_SCHEMAS.deno_run,
     handler: async (args: any) => {
       // Error handling wrapper
-    }
-  }
+    },
+  },
 };
 ```
 
@@ -117,14 +119,14 @@ export const executionTools = {
 
 ```typescript
 // 1. Node.js built-ins
-import { spawn } from 'child_process';
+import { spawn } from "child_process";
 
 // 2. External dependencies
-import { Server } from '@modelcontextprotocol/sdk/server/index.js';
+import { Server } from "@modelcontextprotocol/sdk/server/index.js";
 
 // 3. Internal modules (by category)
-import { DenoCommandOptions } from '../types/index.js';
-import { executeCommand } from '../utils/command.js';
+import { DenoCommandOptions } from "../types/index.js";
+import { executeCommand } from "../utils/command.js";
 ```
 
 #### Function Documentation
@@ -132,12 +134,14 @@ import { executeCommand } from '../utils/command.js';
 ```typescript
 /**
  * Execute a Deno script with specified permissions and options
- * 
+ *
  * @param options - Configuration options for script execution
  * @returns Promise resolving to command execution result
  * @throws DenoCommandError when execution fails
  */
-export async function denoRun(options: DenoRunOptions): Promise<DenoCommandResult> {
+export async function denoRun(
+  options: DenoRunOptions,
+): Promise<DenoCommandResult> {
   // Implementation
 }
 ```
@@ -152,10 +156,10 @@ export class DenoCommandError extends Error {
     message: string,
     public code: number,
     public stdout: string,
-    public stderr: string
+    public stderr: string,
   ) {
     super(message);
-    this.name = 'DenoCommandError';
+    this.name = "DenoCommandError";
   }
 }
 ```
@@ -164,11 +168,13 @@ export class DenoCommandError extends Error {
 
 ```typescript
 return {
-  content: [{
-    type: 'text' as const,
-    text: `Error: ${error.message}\n\nDetails: ${error.stderr}`
-  }],
-  isError: true
+  content: [
+    {
+      type: "text" as const,
+      text: `Error: ${error.message}\n\nDetails: ${error.stderr}`,
+    },
+  ],
+  isError: true,
 };
 ```
 

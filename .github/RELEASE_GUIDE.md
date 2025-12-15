@@ -106,7 +106,7 @@ npm run build
 
 ```json
 {
-	"version": "X.Y.Z"
+  "version": "X.Y.Z"
 }
 ```
 

@@ -149,22 +149,22 @@ Example test results structure:
 
 ```json
 {
- "tests": [
-  {
-   "name": "Node.js Installation",
-   "status": "PASS",
-   "message": "Node.js version: v20.x.x",
-   "timestamp": "2025-12-11T01:30:00Z"
+  "tests": [
+    {
+      "name": "Node.js Installation",
+      "status": "PASS",
+      "message": "Node.js version: v20.x.x",
+      "timestamp": "2025-12-11T01:30:00Z"
+    }
+  ],
+  "summary": {
+    "tests_passed": 12,
+    "tests_failed": 0,
+    "total_tests": 12,
+    "success_rate": 100,
+    "timestamp": "2025-12-11T01:35:00Z",
+    "environment": "docker-container"
   }
- ],
- "summary": {
-  "tests_passed": 12,
-  "tests_failed": 0,
-  "total_tests": 12,
-  "success_rate": 100,
-  "timestamp": "2025-12-11T01:35:00Z",
-  "environment": "docker-container"
- }
 }
 ```
 

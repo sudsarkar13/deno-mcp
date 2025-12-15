@@ -1,72 +1,72 @@
 {
-	"name": "@sudsarkar13/deno-mcp",
-	"version": "1.0.7",
-	"description": "A comprehensive MCP server for Deno development tools. Provides secure access to the complete Deno CLI toolchain including execution, testing, formatting, linting, compilation, and deployment capabilities through the Model Context Protocol.",
-	"private": false,
-	"type": "module",
-	"main": "./build/index.js",
-	"bin": {
-		"deno-mcp": "./build/index.js"
-	},
-	"files": [
-		"build",
-		"README.md",
-		"LICENSE",
-		"docs",
-		"examples"
-	],
-	"scripts": {
-		"build": "tsc && node -e \"const fs = require('fs'); const path = 'build/index.js'; if (process.platform !== 'win32' && fs.existsSync(path)) { fs.chmodSync(path, '755'); } const renderPath = 'build/render-server.js'; if (process.platform !== 'win32' && fs.existsSync(renderPath)) { fs.chmodSync(renderPath, '755'); }\"",
-		"start": "node build/index.js",
-		"start:render": "node build/render-server.js",
-		"prepare": "npm run build",
-		"watch": "tsc --watch",
-		"dev": "npm run watch",
-		"test": "npm run build && node --test test/mcp-server.test.js",
-		"lint": "tsc --noEmit && npx prettier --check \"src/**/*.{ts,js,json}\"",
-		"format": "npx prettier --write \"src/**/*.{ts,js,json}\"",
-		"clean": "node -e \"const fs = require('fs'); if (fs.existsSync('build')) { fs.rmSync('build', { recursive: true, force: true }); }\"",
-		"inspector": "npx @modelcontextprotocol/inspector build/index.js",
-		"prepublishOnly": "npm run clean && npm run build"
-	},
-	"keywords": [
-		"deno",
-		"mcp",
-		"model-context-protocol",
-		"typescript",
-		"development-tools",
-		"cli",
-		"automation",
-		"developer-experience",
-		"toolchain",
-		"runtime"
-	],
-	"author": {
-		"name": "Sudeepta Sarkar",
-		"email": "sudsarkar13@gmail.com"
-	},
-	"license": "MIT",
-	"homepage": "https://github.com/sudsarkar13/deno-mcp#readme",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/sudsarkar13/deno-mcp.git"
-	},
-	"bugs": {
-		"url": "https://github.com/sudsarkar13/deno-mcp/issues"
-	},
-	"engines": {
-		"node": ">=18.0.0"
-	},
-	"dependencies": {
-		"@modelcontextprotocol/sdk": "^1.24.3"
-	},
-	"devDependencies": {
-		"@types/node": "^20.11.24",
-		"audit-ci": "^7.1.0",
-		"prettier": "^3.7.4",
-		"typescript": "^5.3.3"
-	},
-	"publishConfig": {
-		"access": "public"
-	}
+  "name": "@sudsarkar13/deno-mcp",
+  "version": "1.0.7",
+  "description": "A comprehensive MCP server for Deno development tools. Provides secure access to the complete Deno CLI toolchain including execution, testing, formatting, linting, compilation, and deployment capabilities through the Model Context Protocol.",
+  "private": false,
+  "type": "module",
+  "main": "./build/index.js",
+  "bin": {
+    "deno-mcp": "./build/index.js"
+  },
+  "files": [
+    "build",
+    "README.md",
+    "LICENSE",
+    "docs",
+    "examples"
+  ],
+  "scripts": {
+    "build": "tsc && node -e \"const fs = require('fs'); const path = 'build/index.js'; if (process.platform !== 'win32' && fs.existsSync(path)) { fs.chmodSync(path, '755'); } const renderPath = 'build/render-server.js'; if (process.platform !== 'win32' && fs.existsSync(renderPath)) { fs.chmodSync(renderPath, '755'); }\"",
+    "start": "node build/index.js",
+    "start:render": "node build/render-server.js",
+    "prepare": "npm run build",
+    "watch": "tsc --watch",
+    "dev": "npm run watch",
+    "test": "npm run build && node --test test/mcp-server.test.js",
+    "lint": "tsc --noEmit && npx prettier --check \"src/**/*.{ts,js,json}\"",
+    "format": "npx prettier --write \"src/**/*.{ts,js,json}\"",
+    "clean": "node -e \"const fs = require('fs'); if (fs.existsSync('build')) { fs.rmSync('build', { recursive: true, force: true }); }\"",
+    "inspector": "npx @modelcontextprotocol/inspector build/index.js",
+    "prepublishOnly": "npm run clean && npm run build"
+  },
+  "keywords": [
+    "deno",
+    "mcp",
+    "model-context-protocol",
+    "typescript",
+    "development-tools",
+    "cli",
+    "automation",
+    "developer-experience",
+    "toolchain",
+    "runtime"
+  ],
+  "author": {
+    "name": "Sudeepta Sarkar",
+    "email": "sudsarkar13@gmail.com"
+  },
+  "license": "MIT",
+  "homepage": "https://github.com/sudsarkar13/deno-mcp#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/sudsarkar13/deno-mcp.git"
+  },
+  "bugs": {
+    "url": "https://github.com/sudsarkar13/deno-mcp/issues"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.24.3"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.24",
+    "audit-ci": "^7.1.0",
+    "prettier": "^3.7.4",
+    "typescript": "^5.3.3"
+  },
+  "publishConfig": {
+    "access": "public"
+  }
 }

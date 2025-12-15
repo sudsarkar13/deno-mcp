@@ -2,14 +2,14 @@ name: CI/CD Pipeline
 
 on:
   push:
-    branches: [ main, develop ]
-    tags: [ 'v*' ]
+    branches: [main, develop]
+    tags: ["v*"]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 env:
-  NODE_VERSION: '18'
-  REGISTRY_URL: 'https://registry.npmjs.org'
+  NODE_VERSION: "18"
+  REGISTRY_URL: "https://registry.npmjs.org"
 
 jobs:
   # Lint and type checking
@@ -24,7 +24,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -45,7 +45,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -68,7 +68,7 @@ jobs:
     strategy:
       matrix:
         os: [ubuntu-latest, windows-latest, macos-latest]
-        node-version: ['18', '20']
+        node-version: ["18", "20"]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -77,7 +77,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Setup Deno
         uses: denoland/setup-deno@v1
@@ -130,7 +130,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ env.NODE_VERSION }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -149,10 +149,19 @@ jobs:
     if: github.event_name == 'push'
     strategy:
       matrix:
-        docker-config: [
-          { file: 'Dockerfile.test', tag: 'deno-mcp:basic-test', name: 'basic-test' },
-          { file: 'Dockerfile.enhanced-test', tag: 'deno-mcp:enhanced-test', name: 'enhanced-test' }
-        ]
+        docker-config:
+          [
+            {
+              file: "Dockerfile.test",
+              tag: "deno-mcp:basic-test",
+              name: "basic-test",
+            },
+            {
+              file: "Dockerfile.enhanced-test",
+              tag: "deno-mcp:enhanced-test",
+              name: "enhanced-test",
+            },
+          ]
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -190,7 +199,7 @@ jobs:
       - name: Test Docker container (${{ matrix.docker-config.name }})
         run: |
           echo "🐳 Testing Docker configuration: ${{ matrix.docker-config.name }}"
-          
+
           if [[ "${{ matrix.docker-config.name }}" == "basic-test" ]]; then
             # Basic test - MCP server startup verification
             echo "📋 Starting basic Docker test for MCP server..."
@@ -366,7 +375,7 @@ jobs:
         with:
           node-version: ${{ env.NODE_VERSION }}
           registry-url: ${{ env.REGISTRY_URL }}
-          cache: 'npm'
+          cache: "npm"
 
       - name: Install dependencies
         run: npm ci
@@ -519,7 +528,7 @@ jobs:
           echo "## 🧹 Artifact Cleanup Completed" >> $GITHUB_STEP_SUMMARY
           echo "Cleaned up build artifacts for workflow run: ${{ github.run_id }}" >> $GITHUB_STEP_SUMMARY
 
-# Notify on workflow completion
+  # Notify on workflow completion
   notify:
     name: Notify Completion
     runs-on: ubuntu-latest

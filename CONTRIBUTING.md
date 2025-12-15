@@ -158,12 +158,7 @@ function runDeno(options: any) { ... }
 3. **Error Handling**: Use custom error classes
 
 ```typescript
-throw new DenoCommandError(
-  'Command failed',
-  exitCode,
-  stdout,
-  stderr
-);
+throw new DenoCommandError("Command failed", exitCode, stdout, stderr);
 ```
 
 4. **Documentation**: Include JSDoc comments
@@ -192,13 +187,13 @@ export async function denoNewTool(options: Options): Promise<Result> {
 // MCP tool handler
 export const newCategoryTools = {
   deno_new_tool: {
-    name: 'deno_new_tool',
-    description: 'Description of the tool',
+    name: "deno_new_tool",
+    description: "Description of the tool",
     inputSchema: TOOL_SCHEMAS.deno_new_tool,
     handler: async (args: any) => {
       // Handler implementation
-    }
-  }
+    },
+  },
 };
 ```
 

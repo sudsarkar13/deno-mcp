@@ -50,12 +50,12 @@ deno-mcp
 
 ```json
 {
- "mcpServers": {
-  "deno-mcp": {
-   "command": "deno-mcp",
-   "args": []
+  "mcpServers": {
+    "deno-mcp": {
+      "command": "deno-mcp",
+      "args": []
+    }
   }
- }
 }
 ```
 
@@ -115,16 +115,16 @@ deno-mcp --help
 
 ```json
 {
- "mcpServers": {
-  "deno-mcp": {
-   "command": "deno-mcp",
-   "args": [],
-   "env": {
-    "DENO_DIR": "/path/to/.deno",
-    "PATH": "/usr/local/bin:/usr/bin:/bin"
-   }
+  "mcpServers": {
+    "deno-mcp": {
+      "command": "deno-mcp",
+      "args": [],
+      "env": {
+        "DENO_DIR": "/path/to/.deno",
+        "PATH": "/usr/local/bin:/usr/bin:/bin"
+      }
+    }
   }
- }
 }
 ```
 
@@ -567,7 +567,7 @@ envVars:
    ```bash
    # Check health endpoint
    curl https://your-service.onrender.com/health
-   
+
    # View metrics
    curl https://your-service.onrender.com/metrics
    ```
@@ -617,7 +617,7 @@ services:
    ```bash
    # Verify health endpoint responds
    curl https://your-service.onrender.com/health
-   
+
    # Check application logs for errors
    # Ensure MCP server process is running
    ```
@@ -738,7 +738,7 @@ const { Server } = require("@modelcontextprotocol/sdk/server/index.js");
 // Import your MCP server setup
 
 exports.handler = async (event, context) => {
- // Lambda handler implementation
+  // Lambda handler implementation
 };
 ```
 
@@ -975,11 +975,11 @@ deploy:
 ```javascript
 // Add to your server
 app.get("/health", (req, res) => {
- res.json({
-  status: "healthy",
-  timestamp: new Date().toISOString(),
-  version: process.env.npm_package_version,
- });
+  res.json({
+    status: "healthy",
+    timestamp: new Date().toISOString(),
+    version: process.env.npm_package_version,
+  });
 });
 ```
 
@@ -1016,12 +1016,12 @@ done
 const winston = require("winston");
 
 const logger = winston.createLogger({
- level: "info",
- format: winston.format.json(),
- transports: [
-  new winston.transports.File({ filename: "error.log", level: "error" }),
-  new winston.transports.File({ filename: "combined.log" }),
- ],
+  level: "info",
+  format: winston.format.json(),
+  transports: [
+    new winston.transports.File({ filename: "error.log", level: "error" }),
+    new winston.transports.File({ filename: "combined.log" }),
+  ],
 });
 ```
 
@@ -1051,15 +1051,15 @@ const prometheus = require("prom-client");
 
 // Create metrics
 const httpDuration = new prometheus.Histogram({
- name: "http_request_duration_seconds",
- help: "Duration of HTTP requests in seconds",
- labelNames: ["method", "status_code"],
+  name: "http_request_duration_seconds",
+  help: "Duration of HTTP requests in seconds",
+  labelNames: ["method", "status_code"],
 });
 
 // Expose metrics endpoint
 app.get("/metrics", (req, res) => {
- res.set("Content-Type", prometheus.register.contentType);
- res.end(prometheus.register.metrics());
+  res.set("Content-Type", prometheus.register.contentType);
+  res.end(prometheus.register.metrics());
 });
 ```
 
@@ -1067,20 +1067,20 @@ app.get("/metrics", (req, res) => {
 
 ```json
 {
- "dashboard": {
-  "title": "Deno MCP Server",
-  "panels": [
-   {
-    "title": "Request Rate",
-    "type": "graph",
-    "targets": [
-     {
-      "expr": "rate(http_requests_total[5m])"
-     }
+  "dashboard": {
+    "title": "Deno MCP Server",
+    "panels": [
+      {
+        "title": "Request Rate",
+        "type": "graph",
+        "targets": [
+          {
+            "expr": "rate(http_requests_total[5m])"
+          }
+        ]
+      }
     ]
-   }
-  ]
- }
+  }
 }
 ```
 
@@ -1105,8 +1105,8 @@ sudo ufw enable
 const rateLimit = require("express-rate-limit");
 
 const limiter = rateLimit({
- windowMs: 15 * 60 * 1000, // 15 minutes
- max: 100, // limit each IP to 100 requests per windowMs
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
 });
 
 app.use("/api/", limiter);
@@ -1118,11 +1118,11 @@ app.use("/api/", limiter);
 
 ```javascript
 const authenticateApiKey = (req, res, next) => {
- const apiKey = req.headers["x-api-key"];
- if (!apiKey || !isValidApiKey(apiKey)) {
-  return res.status(401).json({ error: "Invalid API key" });
- }
- next();
+  const apiKey = req.headers["x-api-key"];
+  if (!apiKey || !isValidApiKey(apiKey)) {
+    return res.status(401).json({ error: "Invalid API key" });
+  }
+  next();
 };
 
 app.use("/api/", authenticateApiKey);
@@ -1134,18 +1134,18 @@ app.use("/api/", authenticateApiKey);
 const jwt = require("jsonwebtoken");
 
 const authenticateJWT = (req, res, next) => {
- const token = req.headers.authorization?.split(" ")[1];
- if (!token) {
-  return res.status(401).json({ error: "Access token required" });
- }
-
- jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
-  if (err) {
-   return res.status(403).json({ error: "Invalid token" });
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res.status(401).json({ error: "Access token required" });
   }
-  req.user = user;
-  next();
- });
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, user) => {
+    if (err) {
+      return res.status(403).json({ error: "Invalid token" });
+    }
+    req.user = user;
+    next();
+  });
 };
 ```
 
@@ -1281,20 +1281,20 @@ const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 600 }); // 10 minutes
 
 app.use("/api/cache", (req, res, next) => {
- const key = req.originalUrl;
- const cachedResponse = cache.get(key);
+  const key = req.originalUrl;
+  const cachedResponse = cache.get(key);
 
- if (cachedResponse) {
-  return res.json(cachedResponse);
- }
+  if (cachedResponse) {
+    return res.json(cachedResponse);
+  }
 
- res.sendResponse = res.json;
- res.json = (body) => {
-  cache.set(key, body);
-  res.sendResponse(body);
- };
+  res.sendResponse = res.json;
+  res.json = (body) => {
+    cache.set(key, body);
+    res.sendResponse(body);
+  };
 
- next();
+  next();
 });
 ```
 
@@ -1303,8 +1303,8 @@ app.use("/api/cache", (req, res, next) => {
 ```javascript
 // Configure connection limits
 const server = app.listen(3000, () => {
- server.maxConnections = 1000;
- server.timeout = 30000; // 30 seconds
+  server.maxConnections = 1000;
+  server.timeout = 30000; // 30 seconds
 });
 ```
 

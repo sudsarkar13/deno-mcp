@@ -17,7 +17,7 @@ This guide provides step-by-step instructions for deploying the Deno MCP Server 
    ```bash
    # Ensure you have the latest code
    git pull origin main
-   
+
    # Verify required files exist
    ls render.yaml
    ls src/render-server.ts
@@ -104,52 +104,52 @@ This guide provides step-by-step instructions for deploying the Deno MCP Server 
 
 ```yaml
 services:
-  - type: web                    # Web service type
-    name: deno-mcp-server       # Service name in Render
-    env: node                   # Runtime environment
-    region: oregon              # Free tier region
-    plan: free                  # Pricing plan
+  - type: web # Web service type
+    name: deno-mcp-server # Service name in Render
+    env: node # Runtime environment
+    region: oregon # Free tier region
+    plan: free # Pricing plan
     buildCommand: npm ci && npm run build
     startCommand: node build/render-server.js
-    
+
     # Environment variables
     envVars:
       - key: NODE_ENV
-        value: production       # Production environment
+        value: production # Production environment
       - key: LOG_LEVEL
-        value: info            # Logging level
+        value: info # Logging level
       - key: MCP_SERVER_NAME
         value: deno-mcp-render # Server identifier
       - key: DENO_DIR
-        value: /tmp/.deno      # Deno cache directory
+        value: /tmp/.deno # Deno cache directory
       - key: PORT
-        fromService: true      # Auto-assigned by Render
-    
+        fromService: true # Auto-assigned by Render
+
     # Health monitoring
-    healthCheckPath: /health    # Health check endpoint
-    numInstances: 1            # Single instance (free tier)
-    disk: 1GB                  # Storage allocation
-    
+    healthCheckPath: /health # Health check endpoint
+    numInstances: 1 # Single instance (free tier)
+    disk: 1GB # Storage allocation
+
     # Auto-deployment
-    autoDeploy: true           # Deploy on git push
-    branch: main               # Target branch
-    
+    autoDeploy: true # Deploy on git push
+    branch: main # Target branch
+
     # Build optimization
     buildFilter:
-      paths:                   # Monitor these files for changes
+      paths: # Monitor these files for changes
         - src/**
         - package.json
         - package-lock.json
         - tsconfig.json
         - render.yaml
-      ignoredPaths:            # Ignore these files/directories
+      ignoredPaths: # Ignore these files/directories
         - docs/**
         - examples/**
         - test/**
         - README.md
         - .gitignore
         - .github/**
-    
+
     # Security headers
     headers:
       - path: /*
@@ -181,7 +181,7 @@ services:
    ```yaml
    envVars:
      - key: NODE_OPTIONS
-       value: --max-old-space-size=460  # Leave room for system
+       value: --max-old-space-size=460 # Leave room for system
    ```
 
 2. **Build Optimization**
@@ -208,10 +208,10 @@ services:
    ```bash
    # Health check
    curl -s https://your-service.onrender.com/health | jq
-   
+
    # Status page
    open https://your-service.onrender.com/
-   
+
    # Metrics
    curl -s https://your-service.onrender.com/metrics
    ```
@@ -241,10 +241,10 @@ services:
    ```bash
    # Memory usage
    curl -s https://your-service.onrender.com/metrics | grep memory
-   
+
    # Uptime
    curl -s https://your-service.onrender.com/health | jq .uptime
-   
+
    # Process status
    curl -s https://your-service.onrender.com/health | jq .mcp_process
    ```
@@ -308,7 +308,7 @@ envVars:
   - key: NODE_OPTIONS
     value: --max-old-space-size=460
   - key: NODE_ENV
-    value: production  # Enables production optimizations
+    value: production # Enables production optimizations
 ```
 
 #### 4. Service Sleep Issues
@@ -341,9 +341,10 @@ curl https://your-service.onrender.com/health
 # Verify buildFilter paths in render.yaml
 buildFilter:
   paths:
-    - src/**           # Monitor source changes
-    - package.json     # Monitor dependency changes
-    - render.yaml      # Monitor config changes
+    - src/** # Monitor source changes
+    - package.json # Monitor dependency changes
+    - render.yaml # Monitor config changes
+
 
 # Manual deploy
 # Use "Manual Deploy" button in Render dashboard
@@ -443,7 +444,7 @@ npm run inspector  # MCP inspector
        name: deno-mcp-staging
        env: node
        plan: free
-       branch: develop  # Different branch
+       branch: develop # Different branch
        envVars:
          - key: NODE_ENV
            value: staging
@@ -459,7 +460,7 @@ npm run inspector  # MCP inspector
      - type: web
        name: deno-mcp-production
        env: node
-       plan: starter  # Paid plan for better resources
+       plan: starter # Paid plan for better resources
        branch: main
        envVars:
          - key: NODE_ENV
@@ -477,7 +478,7 @@ npm run inspector  # MCP inspector
    # Never commit secrets to render.yaml
    envVars:
      - key: API_KEY
-       sync: false  # Set via dashboard
+       sync: false # Set via dashboard
    ```
 
 2. **Network Security**

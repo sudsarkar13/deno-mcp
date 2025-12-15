@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   deno-mcp:
@@ -21,10 +21,10 @@ services:
       resources:
         limits:
           memory: 512M
-          cpus: '0.5'
+          cpus: "0.5"
         reservations:
           memory: 256M
-          cpus: '0.25'
+          cpus: "0.25"
 
   # Optional: Add a development environment with additional tools
   deno-dev:
@@ -41,8 +41,8 @@ services:
       - DENO_DIR=/home/denouser/.deno
     ports:
       - "3001:3000"
-      - "8080:8080"  # For development servers
-    command: ["tail", "-f", "/dev/null"]  # Keep container running for development
+      - "8080:8080" # For development servers
+    command: ["tail", "-f", "/dev/null"] # Keep container running for development
 
 volumes:
   deno-cache:
