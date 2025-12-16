@@ -11,7 +11,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 #### Custom Domain Support
 
-- **Production Domain**: Deployed MCP server now accessible at https://deno.mcp.sudeeptasarkar.in/
+- **Production Domain**: Deployed MCP server now accessible at <https://deno.mcp.sudeeptasarkar.in/>
 - **Custom DNS Configuration**: Configured custom domain routing for enhanced accessibility and branding
 - **SSL/TLS Security**: Automatic HTTPS certificate provisioning and renewal for secure connections
 - **Domain Verification**: Implemented proper domain verification and health checks
@@ -52,7 +52,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **Custom Domain Documentation**: Updated all relevant documentation to reference the new custom domain
 - **Deployment Guides**: Enhanced deployment documentation with custom domain configuration details
-- **Service URLs**: Updated service references throughout documentation to use https://deno.mcp.sudeeptasarkar.in/
+- **Service URLs**: Updated service references throughout documentation to use <https://deno.mcp.sudeeptasarkar.in/>
 
 ### Technical Details
 

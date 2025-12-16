@@ -5,7 +5,7 @@ services:
     region: oregon # Free tier available region
     plan: free
     buildCommand: npm ci && npm run build
-    startCommand: node build/render-server.js
+    startCommand: node build/http-server.js
     envVars:
       - key: NODE_ENV
         value: production

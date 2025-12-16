@@ -360,7 +360,7 @@ docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
 
 #### Added
 
-- **Custom Domain Support**: Deployed MCP server now accessible at https://deno.mcp.sudeeptasarkar.in/
+- **Custom Domain Support**: Deployed MCP server now accessible at <https://deno.mcp.sudeeptasarkar.in/>
 - **Enhanced Deployment Infrastructure**: Improved Render.com integration with custom domain routing and SSL/TLS security
 
 #### Fixed
