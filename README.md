@@ -329,11 +329,11 @@ The Deno MCP Server is available as Docker images from multiple registries:
 ```bash
 # Latest version
 docker pull sudsarkar13/deno-mcp:latest
-docker pull sudsarkar13/deno-mcp:1.0.6
+docker pull sudsarkar13/deno-mcp:1.0.7
 
 # Multi-platform support (AMD64 + ARM64)
-docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/amd64
-docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
+docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/amd64
+docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/arm64
 ```
 
 ### GitHub Container Registry (GHCR)
@@ -341,11 +341,11 @@ docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
 ```bash
 # Latest version
 docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:latest
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7
 
 # Multi-platform support
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/amd64
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/amd64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
 ```
 
 ### Platform Support
@@ -355,6 +355,23 @@ docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
 - **Cross-platform**: Automatic platform detection and optimization
 
 ## Changelog
+
+### v1.0.7 - 2025-12-16
+
+#### Added
+
+- **Custom Domain Support**: Deployed MCP server now accessible at https://deno.mcp.sudeeptasarkar.in/
+- **Enhanced Deployment Infrastructure**: Improved Render.com integration with custom domain routing and SSL/TLS security
+
+#### Fixed
+
+- **Build System Improvements**: Resolved TypeScript compilation issues with multiple entry points and enhanced render-server.ts compatibility
+- **Production Deployment**: Fixed service initialization and module loading issues in production environment
+
+#### Changed
+
+- **Service Architecture**: Enhanced dual-mode support for both stdio-based MCP communication and HTTP web access
+- **Documentation Updates**: Updated all documentation to reference the new custom domain
 
 ### v1.0.6 - 2025-12-13
 

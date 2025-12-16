@@ -1,6 +1,6 @@
 {
 	"name": "@sudsarkar13/deno-mcp",
-	"version": "1.0.6",
+	"version": "1.0.7",
 	"description": "A comprehensive MCP server for Deno development tools. Provides secure access to the complete Deno CLI toolchain including execution, testing, formatting, linting, compilation, and deployment capabilities through the Model Context Protocol.",
 	"private": false,
 	"type": "module",

@@ -5,6 +5,62 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.7] - 2025-12-16
+
+### Added
+
+#### Custom Domain Support
+
+- **Production Domain**: Deployed MCP server now accessible at https://deno.mcp.sudeeptasarkar.in/
+- **Custom DNS Configuration**: Configured custom domain routing for enhanced accessibility and branding
+- **SSL/TLS Security**: Automatic HTTPS certificate provisioning and renewal for secure connections
+- **Domain Verification**: Implemented proper domain verification and health checks
+
+#### Deployment Infrastructure
+
+- **Render.com Integration**: Enhanced deployment configuration for stable production hosting
+- **Service Reliability**: Improved service uptime and reliability through optimized deployment settings
+- **Health Monitoring**: Added comprehensive health check endpoints for service monitoring
+- **Custom URL Routing**: Configured proper URL routing and request handling for web accessibility
+
+### Fixed
+
+#### Build System Improvements
+
+- **TypeScript Compilation**: Resolved TypeScript compilation issues with multiple entry points
+- **Render Server Integration**: Fixed render-server.ts compilation and deployment compatibility
+- **Build Configuration**: Enhanced tsconfig.json to properly handle dual-mode architecture (stdio + HTTP)
+- **Entry Point Resolution**: Improved module resolution for both MCP server and web service modes
+
+#### Production Deployment
+
+- **Service Startup**: Fixed service initialization issues in production environment
+- **Module Loading**: Resolved module path resolution for compiled JavaScript output
+- **HTTP Wrapper**: Enhanced HTTP service wrapper for web-compatible MCP server access
+- **Error Handling**: Improved error handling and logging for production deployment scenarios
+
+### Changed
+
+#### Service Architecture
+
+- **Dual-Mode Support**: Enhanced architecture to support both stdio-based MCP communication and HTTP web access
+- **Production Readiness**: Improved production deployment configuration and service management
+- **Custom Domain Integration**: Updated service configuration to properly handle custom domain requests
+- **Performance Optimization**: Enhanced service performance and response times for web access
+
+#### Documentation Updates
+
+- **Custom Domain Documentation**: Updated all relevant documentation to reference the new custom domain
+- **Deployment Guides**: Enhanced deployment documentation with custom domain configuration details
+- **Service URLs**: Updated service references throughout documentation to use https://deno.mcp.sudeeptasarkar.in/
+
+### Technical Details
+
+- **HTTP Service Layer**: Maintained compatibility between stdio MCP protocol and HTTP web access
+- **Domain Configuration**: Proper DNS configuration and SSL certificate management
+- **Service Deployment**: Enhanced Render.com deployment configuration for custom domain support
+- **Build System**: Preserved technical fixes for TypeScript compilation while adding new functionality
+
 ## [1.0.6] - 2025-12-13
 
 ### Changed
