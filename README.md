@@ -329,11 +329,11 @@ The Deno MCP Server is available as Docker images from multiple registries:
 ```bash
 # Latest version
 docker pull sudsarkar13/deno-mcp:latest
-docker pull sudsarkar13/deno-mcp:1.0.7
+docker pull sudsarkar13/deno-mcp:1.0.6
 
 # Multi-platform support (AMD64 + ARM64)
-docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/amd64
-docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/arm64
+docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/amd64
+docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
 ```
 
 ### GitHub Container Registry (GHCR)
@@ -341,11 +341,11 @@ docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/arm64
 ```bash
 # Latest version
 docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:latest
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
 
 # Multi-platform support
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/amd64
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/amd64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
 ```
 
 ### Platform Support
@@ -355,21 +355,6 @@ docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
 - **Cross-platform**: Automatic platform detection and optimization
 
 ## Changelog
-
-### v1.0.7 - 2025-12-16
-
-#### Fixed
-
-- **Render Deployment Resolution**: Fixed critical TypeScript compilation issue preventing render-server.ts from being compiled
-- **Service Deployment**: Resolved "Cannot find module" error and restored full service functionality
-- **Production Availability**: Service now fully operational on Render.com with comprehensive health monitoring
-
-#### Added
-
-- **Custom Domain Support**: Added support for custom domain at <https://deno.mcp.sudeeptasarkar.in/>
-- **Web Service Integration**: Implemented dual-mode operation (stdio + HTTP) for broader compatibility
-- **Health Monitoring**: Added comprehensive health check endpoints and status dashboard
-- **Service Documentation**: Enhanced documentation with new deployment URLs and service architecture
 
 ### v1.0.6 - 2025-12-13
 

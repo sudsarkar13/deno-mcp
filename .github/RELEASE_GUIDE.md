@@ -106,7 +106,7 @@ npm run build
 
 ```json
 {
-	"version": "X.Y.Z"
+ "version": "X.Y.Z"
 }
 ```
 
@@ -725,6 +725,7 @@ OIDC (OpenID Connect) trusted publishing eliminates the need for long-lived toke
    ```
 
 3. **Migration Timeline:**
+
    ```bash
    # Phase 1: Test OIDC in staging (if available)
    # Phase 2: Update production workflow

@@ -5,53 +5,6 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [1.0.7] - 2025-12-16
-
-### Fixed
-
-#### Render Deployment Resolution
-
-- **TypeScript Compilation Issue**: Fixed critical issue where `render-server.ts` was not being compiled due to missing explicit inclusion in `tsconfig.json`
-- **Build Configuration**: Updated `tsconfig.json` to explicitly include both `src/index.ts` and `src/render-server.ts` entry points
-- **Render Service Deployment**: Resolved "Cannot find module '/opt/render/project/src/build/render-server.js'" deployment error
-- **HTTP Server Compatibility**: Enhanced render-server.ts to provide web-compatible HTTP endpoints while maintaining MCP functionality
-
-#### Service Availability
-
-- **Production Deployment**: Service now fully operational on Render.com platform
-- **Health Endpoints**: Added comprehensive health check endpoints for monitoring and diagnostics
-- **Status Page**: Implemented status page with MCP server metrics and system information
-- **Service Monitoring**: Enhanced logging and error reporting for production environment
-
-### Added
-
-#### Web Service Integration
-
-- **Custom Domain Support**: Added support for custom domain deployment at `https://deno.mcp.sudeeptasarkar.in/`
-- **Dual Service Architecture**: Maintained both stdio-based MCP server and HTTP-compatible web service
-- **Health Check API**: Added `/health` endpoint for service monitoring and status verification
-- **Metrics Dashboard**: Implemented comprehensive service metrics and status reporting
-
-#### Documentation Updates
-
-- **Deployment Documentation**: Updated documentation with new custom domain URL
-- **Service Architecture**: Enhanced documentation explaining dual-mode operation (stdio + HTTP)
-- **Production Deployment**: Added production deployment examples and configuration guides
-
-### Technical Details
-
-- **Entry Point Compilation**: Fixed TypeScript compiler configuration to handle multiple standalone entry points
-- **Render Platform Compatibility**: Ensured full compatibility with Render.com deployment requirements
-- **Service Architecture**: Implemented HTTP wrapper around stdio-based MCP server for web compatibility
-- **Error Handling**: Enhanced error handling and logging for production deployment scenarios
-
-### Service URLs
-
-- **Primary Service**: <https://deno-mcp.onrender.com/>
-- **Custom Domain**: <https://deno.mcp.sudeeptasarkar.in/>
-- **Health Check**: <https://deno.mcp.sudeeptasarkar.in/health>
-- **Status Page**: <https://deno.mcp.sudeeptasarkar.in/status>
-
 ## [1.0.6] - 2025-12-13
 
 ### Changed
