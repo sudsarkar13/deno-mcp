@@ -1,0 +1,54 @@
+services:
+  - type: web
+    name: deno-mcp-server
+    env: node
+    region: oregon # Free tier available region
+    plan: free
+    buildCommand: npm ci && npm run build
+    startCommand: node build/render-server.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: LOG_LEVEL
+        value: info
+      - key: MCP_SERVER_NAME
+        value: deno-mcp-render
+      - key: DENO_DIR
+        value: /tmp/.deno
+      - key: PORT
+        fromService: true # Render auto-assigns this
+    healthCheckPath: /health
+    numInstances: 1
+    # Free tier resource limits
+    disk: 1GB
+    # Auto-deploy configuration
+    autoDeploy: true
+    branch: main
+    # Build settings
+    buildFilter:
+      paths:
+        - src/**
+        - package.json
+        - package-lock.json
+        - tsconfig.json
+        - render.yaml
+      ignoredPaths:
+        - docs/**
+        - examples/**
+        - test/**
+        - README.md
+        - .gitignore
+        - .github/**
+    # Runtime settings for free tier optimization
+    preDeployCommand: echo "Starting pre-deploy checks..."
+    # Custom headers for security
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+      - path: /*
+        name: Referrer-Policy
+        value: strict-origin-when-cross-origin
