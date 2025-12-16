@@ -399,3 +399,4 @@ docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
 ---
 
 **Built with ❤️ for the Deno community**
+# Trigger deployment - Tuesday 16 December 2025 01:34:22 PM IST
