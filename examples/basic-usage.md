@@ -24,16 +24,16 @@ Add to your `claude_desktop_config.json`:
 
 ```json
 {
-  "mcpServers": {
-    "deno-mcp": {
-      "command": "deno-mcp",
-      "args": [],
-      "env": {
-        "DENO_DIR": "/home/user/.deno",
-        "PATH": "/home/user/.deno/bin:/usr/local/bin:/usr/bin:/bin"
-      }
-    }
+ "mcpServers": {
+  "deno-mcp": {
+   "command": "deno-mcp",
+   "args": [],
+   "env": {
+    "DENO_DIR": "/home/user/.deno",
+    "PATH": "/home/user/.deno/bin:/usr/local/bin:/usr/bin:/bin"
+   }
   }
+ }
 }
 ```
 
@@ -43,13 +43,13 @@ Add to your `config.json`:
 
 ```json
 {
-  "mcpServers": [
-    {
-      "name": "deno-mcp",
-      "command": "deno-mcp",
-      "args": []
-    }
-  ]
+ "mcpServers": [
+  {
+   "name": "deno-mcp",
+   "command": "deno-mcp",
+   "args": []
+  }
+ ]
 }
 ```
 

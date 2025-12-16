@@ -267,12 +267,12 @@ npx @modelcontextprotocol/inspector deno-mcp
 
 ```json
 {
-  "mcpServers": {
-    "deno-mcp": {
-      "command": "deno-mcp",
-      "args": []
-    }
+ "mcpServers": {
+  "deno-mcp": {
+   "command": "deno-mcp",
+   "args": []
   }
+ }
 }
 ```
 
@@ -280,13 +280,13 @@ npx @modelcontextprotocol/inspector deno-mcp
 
 ```json
 {
-  "mcpServers": [
-    {
-      "name": "deno-mcp",
-      "command": "deno-mcp",
-      "args": []
-    }
-  ]
+ "mcpServers": [
+  {
+   "name": "deno-mcp",
+   "command": "deno-mcp",
+   "args": []
+  }
+ ]
 }
 ```
 

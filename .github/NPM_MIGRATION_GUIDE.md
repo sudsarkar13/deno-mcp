@@ -23,7 +23,7 @@ This guide provides immediate steps to fix npm authentication issues caused by t
 The npm CLI has severe limitations for granular token creation:
 
 - `--type=granular` flag is deprecated and causes errors
-- CLI cannot specify package scopes (required for granular tokens)
+- CLI cannot specify package scopes (required for granular tokens)  
 - Multiple authentication and permission issues
 - **Web interface is the ONLY reliable method**
 
@@ -206,4 +206,4 @@ git tag test-v$(date +%s) && git push origin test-v$(date +%s)
 
 ---
 
-_This guide addresses the npm security update from December 9, 2025. Keep this document for future token rotations._
+*This guide addresses the npm security update from December 9, 2025. Keep this document for future token rotations.*

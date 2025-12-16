@@ -84,12 +84,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "mcpServers": {
-    "deno-tools": {
-      "command": "node",
-      "args": ["/path/to/deno-mcp-tools/build/index.js"]
-    }
+ "mcpServers": {
+  "deno-tools": {
+   "command": "node",
+   "args": ["/path/to/deno-mcp-tools/build/index.js"]
   }
+ }
 }
 ```
 
@@ -97,12 +97,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "mcpServers": {
-    "deno-tools": {
-      "command": "node",
-      "args": ["/path/to/deno-mcp-tools/build/index.js"]
-    }
+ "mcpServers": {
+  "deno-tools": {
+   "command": "node",
+   "args": ["/path/to/deno-mcp-tools/build/index.js"]
   }
+ }
 }
 ```
 
@@ -110,11 +110,11 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "mcpServers": {
-    "deno-tools": {
-      "command": "deno-mcp-tools"
-    }
+ "mcpServers": {
+  "deno-tools": {
+   "command": "deno-mcp-tools"
   }
+ }
 }
 ```
 
@@ -124,12 +124,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_run",
-  "arguments": {
-    "script": "main.ts",
-    "permissions": ["--allow-net", "--allow-read"],
-    "args": ["--port", "8000"]
-  }
+ "tool": "deno_run",
+ "arguments": {
+  "script": "main.ts",
+  "permissions": ["--allow-net", "--allow-read"],
+  "args": ["--port", "8000"]
+ }
 }
 ```
 
@@ -137,11 +137,11 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_fmt",
-  "arguments": {
-    "files": ["src/"],
-    "check": false
-  }
+ "tool": "deno_fmt",
+ "arguments": {
+  "files": ["src/"],
+  "check": false
+ }
 }
 ```
 
@@ -149,12 +149,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_test",
-  "arguments": {
-    "coverage": true,
-    "parallel": true,
-    "permissions": ["--allow-read", "--allow-write"]
-  }
+ "tool": "deno_test",
+ "arguments": {
+  "coverage": true,
+  "parallel": true,
+  "permissions": ["--allow-read", "--allow-write"]
+ }
 }
 ```
 
@@ -162,10 +162,10 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_add",
-  "arguments": {
-    "packages": ["@std/http", "@std/path"]
-  }
+ "tool": "deno_add",
+ "arguments": {
+  "packages": ["@std/http", "@std/path"]
+ }
 }
 ```
 
@@ -173,12 +173,12 @@ Add the server to your MCP settings file:
 
 ```json
 {
-  "tool": "deno_compile",
-  "arguments": {
-    "script": "cli.ts",
-    "output": "my-tool",
-    "permissions": ["--allow-read", "--allow-write"]
-  }
+ "tool": "deno_compile",
+ "arguments": {
+  "script": "cli.ts",
+  "output": "my-tool",
+  "permissions": ["--allow-read", "--allow-write"]
+ }
 }
 ```
 
@@ -198,7 +198,7 @@ Most tools accept a `workingDirectory` parameter to specify where the command sh
 
 ```json
 {
-  "workingDirectory": "/path/to/project"
+ "workingDirectory": "/path/to/project"
 }
 ```
 
@@ -208,10 +208,10 @@ Set environment variables for command execution:
 
 ```json
 {
-  "envVars": {
-    "DENO_ENV": "development",
-    "API_KEY": "your-api-key"
-  }
+ "envVars": {
+  "DENO_ENV": "development",
+  "API_KEY": "your-api-key"
+ }
 }
 ```
 
