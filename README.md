@@ -302,6 +302,24 @@ MIT License - see LICENSE file for details.
 - **Documentation**: Check the docs/ directory for detailed guides
 - **Community**: Join discussions in GitHub Discussions
 
+## Live Service
+
+The Deno MCP Server is deployed and available as a live web service:
+
+### Service URLs
+
+- **Custom Domain**: https://deno.mcp.sudeeptasarkar.in/
+- **Primary Service**: https://deno-mcp.onrender.com/
+- **Health Check**: https://deno.mcp.sudeeptasarkar.in/health
+- **Status Page**: https://deno.mcp.sudeeptasarkar.in/status
+
+### Service Features
+
+- **HTTP API Endpoints**: RESTful endpoints for service monitoring and status
+- **Health Monitoring**: Comprehensive health checks and system diagnostics
+- **Status Dashboard**: Real-time service metrics and MCP server information
+- **Production Ready**: Fully deployed and operational on Render.com platform
+
 ## Docker Images
 
 The Deno MCP Server is available as Docker images from multiple registries:
@@ -311,11 +329,11 @@ The Deno MCP Server is available as Docker images from multiple registries:
 ```bash
 # Latest version
 docker pull sudsarkar13/deno-mcp:latest
-docker pull sudsarkar13/deno-mcp:1.0.6
+docker pull sudsarkar13/deno-mcp:1.0.7
 
 # Multi-platform support (AMD64 + ARM64)
-docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/amd64
-docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
+docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/amd64
+docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/arm64
 ```
 
 ### GitHub Container Registry (GHCR)
@@ -323,11 +341,11 @@ docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
 ```bash
 # Latest version
 docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:latest
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7
 
 # Multi-platform support
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/amd64
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/amd64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
 ```
 
 ### Platform Support
@@ -337,6 +355,21 @@ docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
 - **Cross-platform**: Automatic platform detection and optimization
 
 ## Changelog
+
+### v1.0.7 - 2025-12-16
+
+#### Fixed
+
+- **Render Deployment Resolution**: Fixed critical TypeScript compilation issue preventing render-server.ts from being compiled
+- **Service Deployment**: Resolved "Cannot find module" error and restored full service functionality
+- **Production Availability**: Service now fully operational on Render.com with comprehensive health monitoring
+
+#### Added
+
+- **Custom Domain Support**: Added support for custom domain at https://deno.mcp.sudeeptasarkar.in/
+- **Web Service Integration**: Implemented dual-mode operation (stdio + HTTP) for broader compatibility
+- **Health Monitoring**: Added comprehensive health check endpoints and status dashboard
+- **Service Documentation**: Enhanced documentation with new deployment URLs and service architecture
 
 ### v1.0.6 - 2025-12-13
 
