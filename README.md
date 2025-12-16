@@ -308,10 +308,10 @@ The Deno MCP Server is deployed and available as a live web service:
 
 ### Service URLs
 
-- **Custom Domain**: https://deno.mcp.sudeeptasarkar.in/
-- **Primary Service**: https://deno-mcp.onrender.com/
-- **Health Check**: https://deno.mcp.sudeeptasarkar.in/health
-- **Status Page**: https://deno.mcp.sudeeptasarkar.in/status
+- **Custom Domain**: <https://deno.mcp.sudeeptasarkar.in/>
+- **Primary Service**: <https://deno-mcp.onrender.com/>
+- **Health Check**: <https://deno.mcp.sudeeptasarkar.in/health>
+- **Status Page**: <https://deno.mcp.sudeeptasarkar.in/status>
 
 ### Service Features
 
@@ -366,7 +366,7 @@ docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
 
 #### Added
 
-- **Custom Domain Support**: Added support for custom domain at https://deno.mcp.sudeeptasarkar.in/
+- **Custom Domain Support**: Added support for custom domain at <https://deno.mcp.sudeeptasarkar.in/>
 - **Web Service Integration**: Implemented dual-mode operation (stdio + HTTP) for broader compatibility
 - **Health Monitoring**: Added comprehensive health check endpoints and status dashboard
 - **Service Documentation**: Enhanced documentation with new deployment URLs and service architecture
@@ -432,4 +432,5 @@ docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
 ---
 
 **Built with ❤️ for the Deno community**
+
 # Trigger deployment - Tuesday 16 December 2025 01:34:22 PM IST
