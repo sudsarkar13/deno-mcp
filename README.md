@@ -312,13 +312,41 @@ The Deno MCP Server is deployed and available as a live web service:
 - **Primary Service**: <https://deno-mcp.onrender.com/>
 - **Health Check**: <https://deno.mcp.sudeeptasarkar.in/health>
 - **Status Page**: <https://deno.mcp.sudeeptasarkar.in/status>
+- **MCP HTTP Endpoint**: <https://deno.mcp.sudeeptasarkar.in/mcp> (POST)
 
 ### Service Features
 
 - **HTTP API Endpoints**: RESTful endpoints for service monitoring and status
+- **MCP over HTTP**: Full MCP protocol support via HTTP with Server-Sent Events streaming
 - **Health Monitoring**: Comprehensive health checks and system diagnostics
 - **Status Dashboard**: Real-time service metrics and MCP server information
 - **Production Ready**: Fully deployed and operational on Render.com platform
+- **CORS Enabled**: Cross-origin requests supported for web integration
+
+### HTTP MCP Usage
+
+The live service supports the complete MCP protocol over HTTP. See the [MCP HTTP Endpoint Documentation](docs/MCP_HTTP_ENDPOINT.md) for detailed usage examples and integration guides.
+
+**Quick Example:**
+```bash
+# List available tools via HTTP
+curl -X POST https://deno.mcp.sudeeptasarkar.in/mcp \
+  -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "method": "tools/list", "id": 1}'
+
+# Execute a tool via HTTP
+curl -X POST https://deno.mcp.sudeeptasarkar.in/mcp \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "method": "tools/call",
+    "params": {
+      "name": "deno_version",
+      "arguments": {}
+    },
+    "id": 2
+  }'
+```
 
 ## Docker Images
 
