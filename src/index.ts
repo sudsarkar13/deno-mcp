@@ -42,7 +42,7 @@ const allTools = {
 const server = new Server(
   {
     name: "@sudsarkar13/deno-mcp",
-    version: "1.0.0",
+    version: "1.0.9",
   },
   {
     capabilities: {
