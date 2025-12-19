@@ -20,6 +20,47 @@ const PORT = parseInt(process.env.PORT || "3000", 10);
 const HOST = "0.0.0.0";
 const MCP_SERVER_NAME = process.env.MCP_SERVER_NAME || "deno-mcp-render";
 
+// IST timezone helper functions
+const IST_TIMEZONE = 'Asia/Kolkata';
+
+/**
+ * Format date to IST string
+ */
+function toISTString(date: Date = new Date()): string {
+  return date.toLocaleString('en-IN', {
+    timeZone: IST_TIMEZONE,
+    year: 'numeric',
+    month: '2-digit',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  }) + ' IST';
+}
+
+/**
+ * Format date to IST ISO string with timezone offset
+ */
+function toISTISOString(date: Date = new Date()): string {
+  const istDate = new Date(date.toLocaleString('en-US', { timeZone: IST_TIMEZONE }));
+  const offset = '+05:30';
+  return istDate.toISOString().slice(0, -1) + offset;
+}
+
+/**
+ * Format time only in IST
+ */
+function toISTTimeString(date: Date = new Date()): string {
+  return date.toLocaleTimeString('en-IN', {
+    timeZone: IST_TIMEZONE,
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true
+  }) + ' IST';
+}
+
 // MCP server process
 let mcpProcess: ChildProcess | null = null;
 let serverStartTime = new Date();
@@ -39,20 +80,20 @@ function startMcpServer(): Promise<void> {
       });
 
       mcpProcess.on("error", (error) => {
-        console.error("MCP Server process error:", error);
+        console.error(`[${toISTTimeString()}] MCP Server process error:`, error);
         isHealthy = false;
         reject(error);
       });
 
       mcpProcess.on("exit", (code, signal) => {
         console.log(
-          `MCP Server process exited with code ${code}, signal ${signal}`,
+          `[${toISTTimeString()}] MCP Server process exited with code ${code}, signal ${signal}`,
         );
         isHealthy = false;
 
         // Auto-restart if not intentionally stopped
         if (code !== 0 && signal !== "SIGTERM" && signal !== "SIGINT") {
-          console.log("Attempting to restart MCP server...");
+          console.log(`[${toISTTimeString()}] Attempting to restart MCP server...`);
           setTimeout(() => {
             startMcpServer().catch(console.error);
           }, 5000);
@@ -60,25 +101,25 @@ function startMcpServer(): Promise<void> {
       });
 
       mcpProcess.stdout?.on("data", (data) => {
-        console.log("MCP Server stdout:", data.toString());
+        console.log(`[${toISTTimeString()}] MCP Server stdout:`, data.toString());
       });
 
       mcpProcess.stderr?.on("data", (data) => {
-        console.error("MCP Server stderr:", data.toString());
+        console.error(`[${toISTTimeString()}] MCP Server stderr:`, data.toString());
       });
 
       // Give the process a moment to start
       setTimeout(() => {
         if (mcpProcess && !mcpProcess.killed) {
           isHealthy = true;
-          console.log("MCP Server started successfully");
+          console.log(`[${toISTTimeString()}] MCP Server started successfully`);
           resolve();
         } else {
           reject(new Error("MCP Server failed to start"));
         }
       }, 1000);
     } catch (error) {
-      console.error("Failed to start MCP server:", error);
+      console.error(`[${toISTTimeString()}] Failed to start MCP server:`, error);
       isHealthy = false;
       reject(error);
     }
@@ -93,7 +134,8 @@ function handleHealthCheck(req: IncomingMessage, res: ServerResponse) {
 
   const healthStatus = {
     status: isHealthy ? "healthy" : "unhealthy",
-    timestamp: new Date().toISOString(),
+    timestamp: toISTISOString(),
+    timestamp_ist: toISTString(),
     uptime: Math.floor((Date.now() - serverStartTime.getTime()) / 1000),
     server: MCP_SERVER_NAME,
     version: process.env.npm_package_version || "1.0.7",
@@ -119,7 +161,7 @@ function handleHealthCheck(req: IncomingMessage, res: ServerResponse) {
 
   res.end(JSON.stringify(healthStatus, null, 2));
 
-  console.log(`Health check: ${healthStatus.status} (${statusCode})`);
+  console.log(`[${toISTTimeString()}] Health check: ${healthStatus.status} (${statusCode})`);
 }
 
 /**
@@ -183,7 +225,7 @@ function handleStatus(req: IncomingMessage, res: ServerResponse) {
 <body>
     <div class="container">
         <h1>${MCP_SERVER_NAME}</h1>
-        <p class="timestamp">Last updated: ${new Date().toISOString()}</p>
+        <p class="timestamp">Last updated: ${toISTString()}</p>
         
         <div class="status ${isHealthy ? "healthy" : "unhealthy"}">
             <strong>Status: ${isHealthy ? "Healthy" : "Unhealthy"}</strong>
@@ -203,14 +245,14 @@ function handleStatus(req: IncomingMessage, res: ServerResponse) {
                 <p><strong>Uptime:</strong> ${Math.floor((Date.now() - serverStartTime.getTime()) / 1000)}s</p>
                 <p><strong>Memory (RSS):</strong> ${Math.round(process.memoryUsage().rss / 1024 / 1024)}MB</p>
                 <p><strong>Memory (Heap):</strong> ${Math.round(process.memoryUsage().heapUsed / 1024 / 1024)}MB</p>
-                <p><strong>Last Health Check:</strong> ${lastHealthCheck.toLocaleTimeString()}</p>
+                <p><strong>Last Health Check:</strong> ${toISTTimeString(lastHealthCheck)}</p>
             </div>
             
             <div class="info-card">
                 <h3>MCP Process</h3>
                 <p><strong>Running:</strong> ${mcpProcess !== null && !mcpProcess.killed ? "Yes" : "No"}</p>
                 <p><strong>PID:</strong> ${mcpProcess?.pid || "N/A"}</p>
-                <p><strong>Started:</strong> ${serverStartTime.toLocaleTimeString()}</p>
+                <p><strong>Started:</strong> ${toISTTimeString(serverStartTime)}</p>
             </div>
             
             <div class="info-card">
@@ -281,7 +323,8 @@ function handleRequest(req: IncomingMessage, res: ServerResponse) {
         JSON.stringify({
           error: "Not Found",
           message: "Available endpoints: /, /health, /metrics",
-          timestamp: new Date().toISOString(),
+          timestamp: toISTISOString(),
+          timestamp_ist: toISTString(),
         }),
       );
   }
@@ -327,17 +370,17 @@ const httpServer = createServer(handleRequest);
  */
 async function main() {
   try {
-    console.log(`Starting ${MCP_SERVER_NAME}...`);
+    console.log(`[${toISTTimeString()}] Starting ${MCP_SERVER_NAME}...`);
 
     // Start MCP server
     await startMcpServer();
 
     // Start HTTP server
     httpServer.listen(PORT, HOST, () => {
-      console.log(`HTTP server listening on http://${HOST}:${PORT}`);
-      console.log(`Health check available at: http://${HOST}:${PORT}/health`);
-      console.log(`Status page available at: http://${HOST}:${PORT}/`);
-      console.log(`Metrics available at: http://${HOST}:${PORT}/metrics`);
+      console.log(`[${toISTTimeString()}] HTTP server listening on http://${HOST}:${PORT}`);
+      console.log(`[${toISTTimeString()}] Health check available at: http://${HOST}:${PORT}/health`);
+      console.log(`[${toISTTimeString()}] Status page available at: http://${HOST}:${PORT}/`);
+      console.log(`[${toISTTimeString()}] Metrics available at: http://${HOST}:${PORT}/metrics`);
     });
 
     // Setup graceful shutdown
@@ -346,26 +389,26 @@ async function main() {
 
     // Handle uncaught exceptions
     process.on("uncaughtException", (error) => {
-      console.error("Uncaught exception:", error);
+      console.error(`[${toISTTimeString()}] Uncaught exception:`, error);
       isHealthy = false;
       gracefulShutdown("UNCAUGHT_EXCEPTION");
     });
 
     process.on("unhandledRejection", (reason, promise) => {
-      console.error("Unhandled rejection at:", promise, "reason:", reason);
+      console.error(`[${toISTTimeString()}] Unhandled rejection at:`, promise, "reason:", reason);
       isHealthy = false;
       gracefulShutdown("UNHANDLED_REJECTION");
     });
 
-    console.log(`${MCP_SERVER_NAME} started successfully!`);
+    console.log(`[${toISTTimeString()}] ${MCP_SERVER_NAME} started successfully!`);
   } catch (error) {
-    console.error("Failed to start server:", error);
+    console.error(`[${toISTTimeString()}] Failed to start server:`, error);
     process.exit(1);
   }
 }
 
 // Start the server
 main().catch((error) => {
-  console.error("Server startup error:", error);
+  console.error(`[${toISTTimeString()}] Server startup error:`, error);
   process.exit(1);
 });
