@@ -213,20 +213,20 @@ The Deno MCP Server is available as Docker images from multiple registries with 
 
 ```bash
 # Pull and run latest version
-docker pull sudsarkar13/deno-mcp:1.0.6
-docker run -d --name deno-mcp-server sudsarkar13/deno-mcp:1.0.6
+docker pull sudsarkar13/deno-mcp:1.0.9
+docker run -d --name deno-mcp-server sudsarkar13/deno-mcp:1.0.9
 
 # Platform-specific deployment (Apple Silicon)
-docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
-docker run -d --name deno-mcp-server --platform linux/arm64 sudsarkar13/deno-mcp:1.0.6
+docker pull sudsarkar13/deno-mcp:1.0.9 --platform linux/arm64
+docker run -d --name deno-mcp-server --platform linux/arm64 sudsarkar13/deno-mcp:1.0.9
 ```
 
 #### GitHub Container Registry (GHCR)
 
 ```bash
 # Pull and run from GHCR
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
-docker run -d --name deno-mcp-server ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9
+docker run -d --name deno-mcp-server ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9
 ```
 
 #### Docker Compose Deployment
@@ -236,7 +236,7 @@ docker run -d --name deno-mcp-server ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
 version: "3.8"
 services:
   deno-mcp:
-    image: sudsarkar13/deno-mcp:1.0.6
+    image: sudsarkar13/deno-mcp:1.0.9
     container_name: deno-mcp-server
     restart: unless-stopped
     ports:

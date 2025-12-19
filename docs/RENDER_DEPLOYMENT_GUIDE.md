@@ -79,7 +79,7 @@ This guide provides step-by-step instructions for deploying the Deno MCP Server 
      "timestamp": "2023-12-14T22:30:00.000Z",
      "uptime": 120,
      "server": "deno-mcp-render",
-     "version": "1.0.6",
+     "version": "1.0.9",
      "mcp_process": {
        "running": true,
        "pid": 15

@@ -33,11 +33,11 @@ The production image is available from multiple registries with multi-platform s
 ```bash
 # Latest version
 docker pull sudsarkar13/deno-mcp:latest
-docker pull sudsarkar13/deno-mcp:1.0.6
+docker pull sudsarkar13/deno-mcp:1.0.9
 
 # Platform-specific pulls
-docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/amd64
-docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
+docker pull sudsarkar13/deno-mcp:1.0.9 --platform linux/amd64
+docker pull sudsarkar13/deno-mcp:1.0.9 --platform linux/arm64
 ```
 
 #### GitHub Container Registry (GHCR)
@@ -45,11 +45,11 @@ docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
 ```bash
 # Latest version
 docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:latest
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9
 
 # Platform-specific pulls
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/amd64
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9 --platform linux/amd64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9 --platform linux/arm64
 ```
 
 #### Platform Support Details

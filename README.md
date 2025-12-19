@@ -357,11 +357,11 @@ The Deno MCP Server is available as Docker images from multiple registries:
 ```bash
 # Latest version
 docker pull sudsarkar13/deno-mcp:latest
-docker pull sudsarkar13/deno-mcp:1.0.7
+docker pull sudsarkar13/deno-mcp:1.0.9
 
 # Multi-platform support (AMD64 + ARM64)
-docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/amd64
-docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/arm64
+docker pull sudsarkar13/deno-mcp:1.0.9 --platform linux/amd64
+docker pull sudsarkar13/deno-mcp:1.0.9 --platform linux/arm64
 ```
 
 ### GitHub Container Registry (GHCR)
@@ -369,11 +369,11 @@ docker pull sudsarkar13/deno-mcp:1.0.7 --platform linux/arm64
 ```bash
 # Latest version
 docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:latest
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9
 
 # Multi-platform support
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/amd64
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9 --platform linux/amd64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9 --platform linux/arm64
 ```
 
 ### Platform Support
@@ -384,7 +384,7 @@ docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
 
 ## Changelog
 
-### v1.0.7 - 2025-12-16
+### v1.0.9 - 2025-12-20
 
 #### Added
 
@@ -400,6 +400,8 @@ docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.7 --platform linux/arm64
 
 - **Service Architecture**: Enhanced dual-mode support for both stdio-based MCP communication and HTTP web access
 - **Documentation Updates**: Updated all documentation to reference the new custom domain
+
+### v1.0.7 - 2025-12-16
 
 ### v1.0.6 - 2025-12-13
 

@@ -36,30 +36,34 @@ const HOST = "0.0.0.0";
 const MCP_SERVER_NAME = process.env.MCP_SERVER_NAME || "deno-mcp-render";
 
 // IST timezone helper functions
-const IST_TIMEZONE = 'Asia/Kolkata';
+const IST_TIMEZONE = "Asia/Kolkata";
 
 /**
  * Format date to IST string
  */
 function toISTString(date: Date = new Date()): string {
-  return date.toLocaleString('en-IN', {
-    timeZone: IST_TIMEZONE,
-    year: 'numeric',
-    month: '2-digit',
-    day: '2-digit',
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  }) + ' IST';
+  return (
+    date.toLocaleString("en-IN", {
+      timeZone: IST_TIMEZONE,
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit",
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    }) + " IST"
+  );
 }
 
 /**
  * Format date to IST ISO string with timezone offset
  */
 function toISTISOString(date: Date = new Date()): string {
-  const istDate = new Date(date.toLocaleString('en-US', { timeZone: IST_TIMEZONE }));
-  const offset = '+05:30';
+  const istDate = new Date(
+    date.toLocaleString("en-US", { timeZone: IST_TIMEZONE }),
+  );
+  const offset = "+05:30";
   return istDate.toISOString().slice(0, -1) + offset;
 }
 
@@ -67,13 +71,15 @@ function toISTISOString(date: Date = new Date()): string {
  * Format time only in IST
  */
 function toISTTimeString(date: Date = new Date()): string {
-  return date.toLocaleTimeString('en-IN', {
-    timeZone: IST_TIMEZONE,
-    hour: '2-digit',
-    minute: '2-digit',
-    second: '2-digit',
-    hour12: true
-  }) + ' IST';
+  return (
+    date.toLocaleTimeString("en-IN", {
+      timeZone: IST_TIMEZONE,
+      hour: "2-digit",
+      minute: "2-digit",
+      second: "2-digit",
+      hour12: true,
+    }) + " IST"
+  );
 }
 
 // MCP server process
@@ -160,7 +166,7 @@ function initializeHttpMcpServer(): Promise<void> {
       httpMcpServer = new Server(
         {
           name: "@sudsarkar13/deno-mcp-http",
-          version: "1.0.7",
+          version: "1.0.9",
         },
         {
           capabilities: {
@@ -201,45 +207,56 @@ function initializeHttpMcpServer(): Promise<void> {
       });
 
       // Handle tool execution
-      httpMcpServer.setRequestHandler(CallToolRequestSchema, async (request) => {
-        const { name, arguments: args } = request.params;
+      httpMcpServer.setRequestHandler(
+        CallToolRequestSchema,
+        async (request) => {
+          const { name, arguments: args } = request.params;
 
-        // Find the tool handler
-        const tool = allTools[name as keyof typeof allTools];
-        if (!tool) {
-          throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
-        }
-
-        try {
-          // Validate arguments
-          validateArguments(args || {}, tool.inputSchema);
-
-          // Execute the tool
-          const result = await tool.handler(args || {});
-          return result;
-        } catch (error) {
-          if (error instanceof McpError) {
-            throw error;
+          // Find the tool handler
+          const tool = allTools[name as keyof typeof allTools];
+          if (!tool) {
+            throw new McpError(
+              ErrorCode.MethodNotFound,
+              `Unknown tool: ${name}`,
+            );
           }
 
-          // Handle unexpected errors
-          console.error(`Error executing tool ${name}:`, error);
-          throw new McpError(
-            ErrorCode.InternalError,
-            `Tool execution failed: ${error instanceof Error ? error.message : "Unknown error"}`,
-          );
-        }
-      });
+          try {
+            // Validate arguments
+            validateArguments(args || {}, tool.inputSchema);
+
+            // Execute the tool
+            const result = await tool.handler(args || {});
+            return result;
+          } catch (error) {
+            if (error instanceof McpError) {
+              throw error;
+            }
+
+            // Handle unexpected errors
+            console.error(`Error executing tool ${name}:`, error);
+            throw new McpError(
+              ErrorCode.InternalError,
+              `Tool execution failed: ${error instanceof Error ? error.message : "Unknown error"}`,
+            );
+          }
+        },
+      );
 
       // Error handling
       httpMcpServer.onerror = (error) => {
         console.error(`[${toISTTimeString()}] HTTP MCP Server error:`, error);
       };
 
-      console.log(`[${toISTTimeString()}] HTTP MCP Server initialized successfully`);
+      console.log(
+        `[${toISTTimeString()}] HTTP MCP Server initialized successfully`,
+      );
       resolve();
     } catch (error) {
-      console.error(`[${toISTTimeString()}] Failed to initialize HTTP MCP server:`, error);
+      console.error(
+        `[${toISTTimeString()}] Failed to initialize HTTP MCP server:`,
+        error,
+      );
       reject(error);
     }
   });
@@ -258,7 +275,10 @@ function startMcpServer(): Promise<void> {
       });
 
       mcpProcess.on("error", (error) => {
-        console.error(`[${toISTTimeString()}] MCP Server process error:`, error);
+        console.error(
+          `[${toISTTimeString()}] MCP Server process error:`,
+          error,
+        );
         isHealthy = false;
         reject(error);
       });
@@ -271,7 +291,9 @@ function startMcpServer(): Promise<void> {
 
         // Auto-restart if not intentionally stopped
         if (code !== 0 && signal !== "SIGTERM" && signal !== "SIGINT") {
-          console.log(`[${toISTTimeString()}] Attempting to restart MCP server...`);
+          console.log(
+            `[${toISTTimeString()}] Attempting to restart MCP server...`,
+          );
           setTimeout(() => {
             startMcpServer().catch(console.error);
           }, 5000);
@@ -279,11 +301,17 @@ function startMcpServer(): Promise<void> {
       });
 
       mcpProcess.stdout?.on("data", (data) => {
-        console.log(`[${toISTTimeString()}] MCP Server stdout:`, data.toString());
+        console.log(
+          `[${toISTTimeString()}] MCP Server stdout:`,
+          data.toString(),
+        );
       });
 
       mcpProcess.stderr?.on("data", (data) => {
-        console.error(`[${toISTTimeString()}] MCP Server stderr:`, data.toString());
+        console.error(
+          `[${toISTTimeString()}] MCP Server stderr:`,
+          data.toString(),
+        );
       });
 
       // Give the process a moment to start
@@ -297,7 +325,10 @@ function startMcpServer(): Promise<void> {
         }
       }, 1000);
     } catch (error) {
-      console.error(`[${toISTTimeString()}] Failed to start MCP server:`, error);
+      console.error(
+        `[${toISTTimeString()}] Failed to start MCP server:`,
+        error,
+      );
       isHealthy = false;
       reject(error);
     }
@@ -316,7 +347,7 @@ function handleHealthCheck(req: IncomingMessage, res: ServerResponse) {
     timestamp_ist: toISTString(),
     uptime: Math.floor((Date.now() - serverStartTime.getTime()) / 1000),
     server: MCP_SERVER_NAME,
-    version: process.env.npm_package_version || "1.0.7",
+    version: process.env.npm_package_version || "1.0.9",
     node_version: process.version,
     memory: process.memoryUsage(),
     mcp_process: {
@@ -339,7 +370,9 @@ function handleHealthCheck(req: IncomingMessage, res: ServerResponse) {
 
   res.end(JSON.stringify(healthStatus, null, 2));
 
-  console.log(`[${toISTTimeString()}] Health check: ${healthStatus.status} (${statusCode})`);
+  console.log(
+    `[${toISTTimeString()}] Health check: ${healthStatus.status} (${statusCode})`,
+  );
 }
 
 /**
@@ -412,7 +445,7 @@ function handleStatus(req: IncomingMessage, res: ServerResponse) {
         <div class="info-grid">
             <div class="info-card">
                 <h3>Server Info</h3>
-                <p><strong>Version:</strong> ${process.env.npm_package_version || "1.0.7"}</p>
+                <p><strong>Version:</strong> ${process.env.npm_package_version || "1.0.9"}</p>
                 <p><strong>Node.js:</strong> ${process.version}</p>
                 <p><strong>Environment:</strong> ${process.env.NODE_ENV || "development"}</p>
                 <p><strong>Port:</strong> ${PORT}</p>
@@ -479,98 +512,112 @@ async function handleMcpEndpoint(req: IncomingMessage, res: ServerResponse) {
   // Only accept POST requests
   if (req.method !== "POST") {
     res.writeHead(405, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({
-      error: "Method Not Allowed",
-      message: "MCP endpoint only accepts POST requests",
-      timestamp: toISTISOString(),
-    }));
+    res.end(
+      JSON.stringify({
+        error: "Method Not Allowed",
+        message: "MCP endpoint only accepts POST requests",
+        timestamp: toISTISOString(),
+      }),
+    );
     return;
   }
 
   // Validate content type
-  const contentType = req.headers['content-type'];
-  if (!contentType || !contentType.includes('application/json')) {
+  const contentType = req.headers["content-type"];
+  if (!contentType || !contentType.includes("application/json")) {
     res.writeHead(400, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({
-      error: "Bad Request",
-      message: "Content-Type must be application/json",
-      timestamp: toISTISOString(),
-    }));
+    res.end(
+      JSON.stringify({
+        error: "Bad Request",
+        message: "Content-Type must be application/json",
+        timestamp: toISTISOString(),
+      }),
+    );
     return;
   }
 
   // Check if HTTP MCP server is initialized
   if (!httpMcpServer) {
     res.writeHead(503, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({
-      error: "Service Unavailable",
-      message: "MCP server not initialized",
-      timestamp: toISTISOString(),
-    }));
+    res.end(
+      JSON.stringify({
+        error: "Service Unavailable",
+        message: "MCP server not initialized",
+        timestamp: toISTISOString(),
+      }),
+    );
     return;
   }
 
   try {
     // Read request body
-    let body = '';
-    req.on('data', chunk => {
+    let body = "";
+    req.on("data", (chunk) => {
       body += chunk.toString();
     });
 
-    req.on('end', async () => {
+    req.on("end", async () => {
       try {
         // Parse JSON-RPC request
         const mcpRequest = JSON.parse(body);
-        
+
         // Validate JSON-RPC format
         if (!mcpRequest.jsonrpc || mcpRequest.jsonrpc !== "2.0") {
           res.writeHead(400, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({
-            jsonrpc: "2.0",
-            error: {
-              code: -32600,
-              message: "Invalid Request - missing or invalid jsonrpc version"
-            },
-            id: mcpRequest.id || null,
-          }));
+          res.end(
+            JSON.stringify({
+              jsonrpc: "2.0",
+              error: {
+                code: -32600,
+                message: "Invalid Request - missing or invalid jsonrpc version",
+              },
+              id: mcpRequest.id || null,
+            }),
+          );
           return;
         }
 
         if (!mcpRequest.method) {
           res.writeHead(400, { "Content-Type": "application/json" });
-          res.end(JSON.stringify({
-            jsonrpc: "2.0",
-            error: {
-              code: -32600,
-              message: "Invalid Request - missing method"
-            },
-            id: mcpRequest.id || null,
-          }));
+          res.end(
+            JSON.stringify({
+              jsonrpc: "2.0",
+              error: {
+                code: -32600,
+                message: "Invalid Request - missing method",
+              },
+              id: mcpRequest.id || null,
+            }),
+          );
           return;
         }
 
-        console.log(`[${toISTTimeString()}] MCP HTTP Request: ${mcpRequest.method}`);
+        console.log(
+          `[${toISTTimeString()}] MCP HTTP Request: ${mcpRequest.method}`,
+        );
 
         // Set up Server-Sent Events headers
         res.writeHead(200, {
-          'Content-Type': 'text/event-stream',
-          'Cache-Control': 'no-cache',
-          'Connection': 'keep-alive',
-          'Access-Control-Allow-Origin': '*',
-          'Access-Control-Allow-Headers': 'Cache-Control',
+          "Content-Type": "text/event-stream",
+          "Cache-Control": "no-cache",
+          Connection: "keep-alive",
+          "Access-Control-Allow-Origin": "*",
+          "Access-Control-Allow-Headers": "Cache-Control",
         });
 
         // Send initial connection event
         res.write(`event: connected\n`);
-        res.write(`data: ${JSON.stringify({
-          type: "connection",
-          message: "MCP HTTP stream established",
-          timestamp: toISTISOString()
-        })}\n\n`);
+        res.write(
+          `data: ${JSON.stringify({
+            type: "connection",
+            message: "MCP HTTP stream established",
+            timestamp: toISTISOString(),
+          })}\n\n`,
+        );
 
         // Process MCP request
         let mcpResponse;
-        
+
         if (mcpRequest.method === "tools/list") {
           // Handle list tools request directly
           const denoInstalled = await checkDenoInstallation();
@@ -605,16 +652,21 @@ async function handleMcpEndpoint(req: IncomingMessage, res: ServerResponse) {
 
           // Send progress event
           res.write(`event: progress\n`);
-          res.write(`data: ${JSON.stringify({
-            type: "progress",
-            message: `Executing tool: ${name || 'unknown'}`,
-            timestamp: toISTISOString()
-          })}\n\n`);
+          res.write(
+            `data: ${JSON.stringify({
+              type: "progress",
+              message: `Executing tool: ${name || "unknown"}`,
+              timestamp: toISTISOString(),
+            })}\n\n`,
+          );
 
           // Find the tool handler
           const tool = allTools[name as keyof typeof allTools];
           if (!tool) {
-            throw new McpError(ErrorCode.MethodNotFound, `Unknown tool: ${name}`);
+            throw new McpError(
+              ErrorCode.MethodNotFound,
+              `Unknown tool: ${name}`,
+            );
           }
 
           try {
@@ -637,33 +689,41 @@ async function handleMcpEndpoint(req: IncomingMessage, res: ServerResponse) {
             );
           }
         } else {
-          throw new McpError(ErrorCode.MethodNotFound, `Unknown method: ${mcpRequest.method}`);
+          throw new McpError(
+            ErrorCode.MethodNotFound,
+            `Unknown method: ${mcpRequest.method}`,
+          );
         }
 
         // Send the response as an event
         res.write(`event: response\n`);
-        res.write(`data: ${JSON.stringify({
-          jsonrpc: "2.0",
-          result: mcpResponse,
-          id: mcpRequest.id,
-        })}\n\n`);
+        res.write(
+          `data: ${JSON.stringify({
+            jsonrpc: "2.0",
+            result: mcpResponse,
+            id: mcpRequest.id,
+          })}\n\n`,
+        );
 
         // Send completion event
         res.write(`event: complete\n`);
-        res.write(`data: ${JSON.stringify({
-          type: "completion",
-          message: "Request processed successfully",
-          timestamp: toISTISOString()
-        })}\n\n`);
+        res.write(
+          `data: ${JSON.stringify({
+            type: "completion",
+            message: "Request processed successfully",
+            timestamp: toISTISOString(),
+          })}\n\n`,
+        );
 
-        console.log(`[${toISTTimeString()}] MCP HTTP Response sent for: ${mcpRequest.method}`);
+        console.log(
+          `[${toISTTimeString()}] MCP HTTP Response sent for: ${mcpRequest.method}`,
+        );
 
         // Close the stream
         res.end();
-
       } catch (error) {
         console.error(`[${toISTTimeString()}] MCP endpoint error:`, error);
-        
+
         // Send error as event
         let requestId = null;
         try {
@@ -676,7 +736,8 @@ async function handleMcpEndpoint(req: IncomingMessage, res: ServerResponse) {
         const errorResponse = {
           jsonrpc: "2.0",
           error: {
-            code: error instanceof McpError ? error.code : ErrorCode.InternalError,
+            code:
+              error instanceof McpError ? error.code : ErrorCode.InternalError,
             message: error instanceof Error ? error.message : "Unknown error",
           },
           id: requestId,
@@ -694,29 +755,32 @@ async function handleMcpEndpoint(req: IncomingMessage, res: ServerResponse) {
     });
 
     // Handle request errors
-    req.on('error', (error) => {
+    req.on("error", (error) => {
       console.error(`[${toISTTimeString()}] MCP request error:`, error);
       if (!res.headersSent) {
         res.writeHead(400, { "Content-Type": "application/json" });
-        res.end(JSON.stringify({
-          jsonrpc: "2.0",
-          error: {
-            code: -32700,
-            message: "Parse error"
-          },
-          id: null,
-        }));
+        res.end(
+          JSON.stringify({
+            jsonrpc: "2.0",
+            error: {
+              code: -32700,
+              message: "Parse error",
+            },
+            id: null,
+          }),
+        );
       }
     });
-
   } catch (error) {
     console.error(`[${toISTTimeString()}] MCP endpoint setup error:`, error);
     res.writeHead(500, { "Content-Type": "application/json" });
-    res.end(JSON.stringify({
-      error: "Internal Server Error",
-      message: "Failed to process MCP request",
-      timestamp: toISTISOString(),
-    }));
+    res.end(
+      JSON.stringify({
+        error: "Internal Server Error",
+        message: "Failed to process MCP request",
+        timestamp: toISTISOString(),
+      }),
+    );
   }
 }
 
@@ -820,11 +884,21 @@ async function main() {
 
     // Start HTTP server
     httpServer.listen(PORT, HOST, () => {
-      console.log(`[${toISTTimeString()}] HTTP server listening on http://${HOST}:${PORT}`);
-      console.log(`[${toISTTimeString()}] Health check available at: http://${HOST}:${PORT}/health`);
-      console.log(`[${toISTTimeString()}] Status page available at: http://${HOST}:${PORT}/`);
-      console.log(`[${toISTTimeString()}] Metrics available at: http://${HOST}:${PORT}/metrics`);
-      console.log(`[${toISTTimeString()}] MCP HTTP endpoint available at: http://${HOST}:${PORT}/mcp`);
+      console.log(
+        `[${toISTTimeString()}] HTTP server listening on http://${HOST}:${PORT}`,
+      );
+      console.log(
+        `[${toISTTimeString()}] Health check available at: http://${HOST}:${PORT}/health`,
+      );
+      console.log(
+        `[${toISTTimeString()}] Status page available at: http://${HOST}:${PORT}/`,
+      );
+      console.log(
+        `[${toISTTimeString()}] Metrics available at: http://${HOST}:${PORT}/metrics`,
+      );
+      console.log(
+        `[${toISTTimeString()}] MCP HTTP endpoint available at: http://${HOST}:${PORT}/mcp`,
+      );
     });
 
     // Setup graceful shutdown
@@ -839,12 +913,19 @@ async function main() {
     });
 
     process.on("unhandledRejection", (reason, promise) => {
-      console.error(`[${toISTTimeString()}] Unhandled rejection at:`, promise, "reason:", reason);
+      console.error(
+        `[${toISTTimeString()}] Unhandled rejection at:`,
+        promise,
+        "reason:",
+        reason,
+      );
       isHealthy = false;
       gracefulShutdown("UNHANDLED_REJECTION");
     });
 
-    console.log(`[${toISTTimeString()}] ${MCP_SERVER_NAME} started successfully!`);
+    console.log(
+      `[${toISTTimeString()}] ${MCP_SERVER_NAME} started successfully!`,
+    );
   } catch (error) {
     console.error(`[${toISTTimeString()}] Failed to start server:`, error);
     process.exit(1);

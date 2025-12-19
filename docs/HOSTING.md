@@ -170,11 +170,11 @@ The Deno MCP Server is available from multiple container registries with full mu
 ```bash
 # Pull latest version
 docker pull sudsarkar13/deno-mcp:latest
-docker pull sudsarkar13/deno-mcp:1.0.6
+docker pull sudsarkar13/deno-mcp:1.0.9
 
 # Platform-specific pulls (optional - Docker auto-detects)
-docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/amd64
-docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
+docker pull sudsarkar13/deno-mcp:1.0.9 --platform linux/amd64
+docker pull sudsarkar13/deno-mcp:1.0.9 --platform linux/arm64
 ```
 
 #### GitHub Container Registry (GHCR)
@@ -182,11 +182,11 @@ docker pull sudsarkar13/deno-mcp:1.0.6 --platform linux/arm64
 ```bash
 # Pull latest version
 docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:latest
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9
 
 # Platform-specific pulls
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/amd64
-docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6 --platform linux/arm64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9 --platform linux/amd64
+docker pull ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9 --platform linux/arm64
 ```
 
 #### Multi-Platform Support
@@ -204,14 +204,14 @@ docker run -d \
   --name deno-mcp-server \
   -p 3000:3000 \
   -v $(pwd)/workspace:/workspace \
-  sudsarkar13/deno-mcp:1.0.6
+  sudsarkar13/deno-mcp:1.0.9
 
 # Using GitHub Container Registry
 docker run -d \
   --name deno-mcp-server \
   -p 3000:3000 \
   -v $(pwd)/workspace:/workspace \
-  ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.6
+  ghcr.io/sudsarkar13/deno-mcp/deno-mcp:1.0.9
 ```
 
 ### Building Your Own Image

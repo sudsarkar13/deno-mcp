@@ -5,6 +5,18 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [1.0.9] - 2025-12-20
+
+### Added
+
+- **Version Update**: Updated all version references from 1.0.6 and 1.0.7 to 1.0.9 across the entire project
+- **Comprehensive Version Synchronization**: Ensured consistency across package.json, source files, documentation, and Docker configurations
+
+### Changed
+
+- **Documentation Updates**: Updated all Docker image tags and version references throughout documentation
+- **Build System**: Updated fallback version strings in source code to match new version
+
 ## [1.0.7] - 2025-12-16
 
 ### Added

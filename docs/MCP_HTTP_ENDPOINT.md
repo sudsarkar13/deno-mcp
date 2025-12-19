@@ -86,26 +86,31 @@ data: {"type":"completion","message":"Request processed successfully","timestamp
 The endpoint streams several types of events:
 
 ### Connection Events
+
 - **Event**: `connected`
 - **Purpose**: Confirms stream establishment
 - **Data**: Connection metadata
 
 ### Progress Events
+
 - **Event**: `progress`
 - **Purpose**: Updates on operation progress
 - **Data**: Progress information and current status
 
 ### Response Events
+
 - **Event**: `response`
 - **Purpose**: The actual MCP response
 - **Data**: JSON-RPC 2.0 formatted response
 
 ### Completion Events
+
 - **Event**: `complete`
 - **Purpose**: Signals successful completion
 - **Data**: Completion metadata
 
 ### Error Events
+
 - **Event**: `error`
 - **Purpose**: Error information
 - **Data**: JSON-RPC 2.0 formatted error response
