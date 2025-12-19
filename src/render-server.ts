@@ -96,7 +96,7 @@ function handleHealthCheck(req: IncomingMessage, res: ServerResponse) {
     timestamp: new Date().toISOString(),
     uptime: Math.floor((Date.now() - serverStartTime.getTime()) / 1000),
     server: MCP_SERVER_NAME,
-    version: process.env.npm_package_version || "1.0.6",
+    version: process.env.npm_package_version || "1.0.7",
     node_version: process.version,
     memory: process.memoryUsage(),
     mcp_process: {
@@ -192,7 +192,7 @@ function handleStatus(req: IncomingMessage, res: ServerResponse) {
         <div class="info-grid">
             <div class="info-card">
                 <h3>Server Info</h3>
-                <p><strong>Version:</strong> ${process.env.npm_package_version || "1.0.6"}</p>
+                <p><strong>Version:</strong> ${process.env.npm_package_version || "1.0.7"}</p>
                 <p><strong>Node.js:</strong> ${process.version}</p>
                 <p><strong>Environment:</strong> ${process.env.NODE_ENV || "development"}</p>
                 <p><strong>Port:</strong> ${PORT}</p>
